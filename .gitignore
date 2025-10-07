@@ -36,3 +36,9 @@ gamepath.cfg
 media.cfg
 bnupdate.tar.gz
 path.cfg
+
+.*
+!.github
+!.gitignore
+!.envrc
+!.gitkeep
