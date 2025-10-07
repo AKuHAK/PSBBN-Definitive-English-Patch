@@ -24,20 +24,32 @@
       <TITLE id="TITLE-TOPMENU" label = "Top Menu" />
       <ITEM id="BNCH-GAME-COLLECTION" label="Game Collection" link="href" linkargs="mode=correction" href="file:/opt0/bn/script/game/game.xml" />
       <ITEM id="ITEM-CHANNEL" label="Channels" link="subgroup" subgroup="GROUP-CHANNEL" />
-      <ITEM id="BNCH-UTILITY" label="System Configuration" link="subgroup" subgroup="GROUP-UTILITY" />
       <ITEM id="PSBB-GUIDE" label="PlayStation®BB Guide" link="href" href="file:/opt0/bn/script/guide/main.xml" />
   </MENUGROUP>
   <MENUGROUP id="GROUP-CHANNEL" menutype="icon" order="center" bgm="enable" mediadetect="all" retgroup="GROUP-TOPMENU" retitem="ITEM-CHANNEL" >
-      <ITEM id="BNCH-GAME" icon="file:/opt0/bn/script/texture/game256.tm2" link="subgroup" subgroup="CHANNEL-GAME" />
-      <ITEM id="BNCH-MUSIC" icon="file:/opt0/bn/script/texture/music256.tm2" link="subgroup" subgroup="CHANNEL-MUSIC" />
-      <ITEM id="BNCH-MOVIE" icon="file:/opt0/bn/script/texture/movie256.tm2" link="subgroup" subgroup="CHANNEL-MOVIE" />
-      <ITEM id="BNCH-PHOTO" icon="file:/opt0/bn/script/texture/photo256.tm2" link="subgroup" subgroup="CHANNEL-PHOTO" />
-  </MENUGROUP>
-  <MENUGROUP id="GROUP-ISPCH" menutype="label" order="left" bgm="continue" mediadetect="false" retgroup="GROUP-TOPMENU" retitem="ISP-CHANNEL" >
+      <ITEM id="BNCH-GAME"  icon="file:/opt0/bn/script/texture/game256.tm2"     link="subgroup" subgroup="CHANNEL-GAME" />
+      <ITEM id="BNCH-INET"  icon="file:/opt0/bn/script/texture/internet256.tm2" link="subgroup" subgroup="CHANNEL-INTERNET" />
+      <ITEM id="BNCH-UTILITY"  icon="file:/opt0/bn/script/texture/utility256.tm2"  link="subgroup" subgroup="GROUP-UTILITY" />
+      <ITEM id="BNCH-MUSIC" icon="file:/opt0/bn/script/texture/music256.tm2"    link="subgroup" subgroup="CHANNEL-MUSIC" />
+      <ITEM id="BNCH-MOVIE" icon="file:/opt0/bn/script/texture/movie256.tm2"    link="subgroup" subgroup="CHANNEL-MOVIE" />
+      <ITEM id="BNCH-PHOTO" icon="file:/opt0/bn/script/texture/photo256.tm2"    link="subgroup" subgroup="CHANNEL-PHOTO" />
+      <ITEM id="ISP-CHANNEL"      icon="texture/PSP/ETC_icon.tm2"     link="subgroup" subgroup="GROUP-ISPCH" />
+ </MENUGROUP>
+  <MENUGROUP id="GROUP-ISPCH" menutype="icon" order="left" bgm="continue" mediadetect="false" retgroup="GROUP-CHANNEL" retitem="ISP-CHANNEL" >
       <TITLE id="TITLE-ISPCH" label="Internet Service Provider" />
-  </MENUGROUP>
-  <MENUGROUP id="CHANNEL-GAME" menutype="label" order="left" bgm="disable" mediadetect="game" retgroup="GROUP-CHANNEL" retitem="BNCH-GAME" >
-      <TITLE id="TITLE-GAME" label = "Game Channel" />
+      <ITEM id="ICO-NBB" icon="texture/PSP/NBB_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-SCN" icon="texture/PSP/SCN_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-YBB" icon="texture/PSP/YBB_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-USN" icon="texture/PSP/USN_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-AII" icon="texture/PSP/AII_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-OCN" icon="texture/PSP/OCN_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-BGL" icon="texture/PSP/BGL_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-NFT" icon="texture/PSP/NFT_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-PLL" icon="texture/PSP/PLL_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+      <ITEM id="ICO-ISO" icon="texture/PSP/ISO_icon.tm2" link="href" href="file:/opt0/bn/script/utility/ispconf.xml" />
+</MENUGROUP>
+  <MENUGROUP id="CHANNEL-INTERNET" menutype="label" order="left" bgm="disable" mediadetect="game" retgroup="GROUP-CHANNEL" retitem="BNCH-INET" >
+      <TITLE id="TITLE-INTERNET" label = "Online Channels" />
       <ITEM id="PSBBCH-PSNOW" label="PlayStation® Now!" link="href" href="http://psbbn.ru/bb-scej.scei.co.jp/psnow/main.xml"/>
       <ITEM id="PSBBCH-SCEJ" label="SCEJ Ch." link="href" href="http://psbbn.ru/scejch.scej-online.jp/JCH/main.xml"/>
       <ITEM id="PSBBCH-CAPCOM" label="CAPCOM CHANNEL" link="href" href="http://psbbn.ru/www.capcombb.download.2iij.net/top.xml"/>
@@ -47,6 +59,12 @@
       <ITEM id="PSBBCH-BANDAI" label="BANDAI Entertainment World" link="href" href="http://psbbn.ru/psbb.channel.or.jp/main.xml"/>
       <ITEM id="PSBBCH-HUDSON" label="HUDSON CHANNEL" link="href" href="http://psbbn.ru/psbb.hudson.co.jp/hudson.xml"/>
       <ITEM id="PSBBCH-EA" label="EA CHANNEL" link="href" href="http://psbbn.ru/psbb.japan.ea.com/PSBB/main/menu1.xml"/>
+      <ITEM id="PSBBCH-TEST"        label="Test Channel" link="href" href="http://psbbn.ru/test/main.xml"/>
+  </MENUGROUP>
+  <MENUGROUP id="CHANNEL-GAME" menutype="label" order="left" bgm="disable" mediadetect="game" retgroup="GROUP-CHANNEL" retitem="BNCH-GAME" >
+      <TITLE id="TITLE-GAME" label = "Game Channel" />
+      <ITEM id="BNCH-GAME-COLLECTION" label="Game Collection" link="href" linkargs="mode=collection" href="file:/opt0/bn/script/game/game.xml"/>
+      <ITEM id="DISC" label="Launch Disc" link="href" linkargs="uri=pfs:/PP.DISC" href="file:/opt0/bn/script/game/boot_game3.xml" />
   </MENUGROUP>
   <MENUGROUP id="CHANNEL-MUSIC" menutype="label" order="left" bgm="disable" mediadetect="music" retgroup="GROUP-CHANNEL" retitem="BNCH-MUSIC" >
       <TITLE id="TITLE-MUSIC" label = "Music Channel" />
@@ -68,16 +86,28 @@
       <ITEM id="UTILITY-SYSCONF" label="System Settings" link="href" href="file:/opt0/bn/script/utility/sysconf.xml" />
       <ITEM id="UTILITY-NETCONF" label="Network Settings" link="subgroup" subgroup="GROUP-NETCONF" />
       <ITEM id="UTILITY-UPDATE" label="Update" link="href" href="file:/opt0/bn/script/utility/sysupdate.xml" />
+      <ITEM id="UTILITY-POWER" label="Power Options" link="subgroup" subgroup="GROUP-POWER" />
       <ITEM id="UTILITY-BROWSER" label="Save Data Management" link="href" href="file:/opt0/bn/script/utility/browser.xml" />
       <ITEM id="UTILITY-ED" label="Payment Settings" link="subgroup" subgroup="GROUP-ED" />
+      <ITEM id="UTILITY-MAIL" label="Mail" link="href" href="file:/opt0/bn/script/utility/browser.xml" />
+      <ITEM id="UTILITY-ABOUT" label="About" link="href" href="file:/opt0/bn/script/system/about.xml" />
   </MENUGROUP>
   <MENUGROUP id="GROUP-NETCONF" menutype="label" order="left" bgm="continue" retgroup="GROUP-UTILITY" retitem="UTILITY-NETCONF" >
       <TITLE id="TITLE-NETCONF" label="Network Settings" />
       <ITEM id="NETCONF-EDIT" label="Confirm/Change" link="href" linkargs="start=edit" href="file:/opt0/bn/script/utility/netconf.xml" />
       <ITEM id="NETCONF-TEST" label="Connection Test" link="href" linkargs="start=test" href="file:/opt0/bn/script/utility/netconf.xml" />
+      <ITEM id="NETCONF-BACKUP" label="Backup settings" link="href" linkargs="start=backup" href="file:/opt0/bn/script/utility/netconf.xml" />
+      <ITEM id="NETCONF-RESTORE" label="Restore settings" link="href" linkargs="start=restore" href="file:/opt0/bn/script/utility/netconf.xml" />
   </MENUGROUP>
   <MENUGROUP id="GROUP-ED" menutype="label" order="left" bgm="continue" retgroup="GROUP-UTILITY" retitem="UTILITY-ED" >
       <TITLE id="TITLE-ED" label="Payment Settings" />
       <ITEM id="ED-FEEGAID" label="feega" link="href" href="file:/opt0/bn/script/edclient/member_menu.xml" />
+  </MENUGROUP>
+  <MENUGROUP id="GROUP-POWER" menutype="label" order="left" bgm="continue" retgroup="GROUP-UTILITY" retitem="UTILITY-POWER" >
+      <TITLE id="TITLE-POWER" label="Power Options" />
+      <ITEM id="POWER-EXIT"   label="Fast Reboot" link="href"  href="file:/opt0/bn/script/system/bn_exit.xml" />
+      <ITEM id="POWER-RBT"   label="Reboot" link="href"          linkargs="uri=pfs:/PP.BBN" href="file:/opt0/bn/script/game/boot_game3.xml" />
+      <ITEM id="POWER-OSD"    label="Reboot in OSD" link="href"   linkargs="uri=pfs:/PP.HDD" href="file:/opt0/bn/script/game/boot_game3.xml" />
+      <ITEM id="POWER-OFF"    label="Shut Down" link="href"       linkargs="uri=pfs:/PP.PWR" href="file:/opt0/bn/script/game/boot_game3.xml" />
   </MENUGROUP>
 </RESOURCE>
