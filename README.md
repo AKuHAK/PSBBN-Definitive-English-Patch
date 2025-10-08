@@ -14,7 +14,30 @@ This project aims to translate PSBBN from Japanese to English, introduce modern 
 
 You can find out more about the PSBBN software on [Wikipedia](https://en.wikipedia.org/wiki/PlayStation_Broadband_Navigator) and on my [YouTube channel](https://www.youtube.com/@CosmicScaleFactor).
 
-# Donations  
+# AKuHAK differences
+Refactor top.xml to improve menu structure and add new options
+- Moved System Configuration into Channels; added an icon from older BBNav version for this new entry
+- Split Local Games Collection and Online Channels into separate submenus
+  - Added icon for Online Channels
+  - Added "Launch Disc" option under Games Collection
+- Added placeholder icon for Internet Service Providers - 10 providers
+- Added test channel sourced from Vitas server
+- Added Power Options submenu under System Configuration (Fast Reboot, Reboot, Reboot to OSD, Shut Down)
+- Added ability to back up and restore network settings to/from memory card in Network Settings
+- Added Mail Option submenu under System Configuration
+TODO:
+- replace fast reboot with launch built-in ps2linux
+- use 1Gb partition for the linux 1
+- switch all scripts to python
+- replace pops partition with 1 partition per game
+- use apache server for top.xml update redirection to the vitas server
+- launch linux by holding some button?
+- osdlauncher by default,
+- fix ext2 formatting
+- install sshd daemon
+- restore more
+
+# Donations
 If you appreciate my work and want to support the ongoing development of the PSBBN Definitive English Patch and other PS2-related projects, [you can donate to my Ko-Fi](https://ko-fi.com/cosmicscale).
 
 This project uses [webhook.site](https://webhook.site/) to automatically contribute game artwork/icons and report missing artwork/icons to the [PSBBN Art Database](https://github.com/CosmicScale/psbbn-art-database) and the [HDD-OSD Icon Database](https://github.com/cosmicscale/hdd-osd-icon-database). As the project has grow in popularity, we're exceeding the limit offered by a free account. A paid subscription costs $9/month or $90/year, donations help fund this.
@@ -56,16 +79,16 @@ This project uses [webhook.site](https://webhook.site/) to automatically contrib
 
 [![PSBBN Launcher for Windows: Easy Install & Setup](https://github.com/user-attachments/assets/981e4abc-10b0-49d2-8d52-3e19ea80650b)](https://www.youtube.com/watch?v=O5ZvJoW4oNw)
 
-**[NEW! PSBBN Launcher For Windows](#installing-on-windows)** - The New way to install the **PSBBN Definitive Patch** on Windows 10 and 11.  
+**[NEW! PSBBN Launcher For Windows](#installing-on-windows)** - The New way to install the **PSBBN Definitive Patch** on Windows 10 and 11.
 Special thanks to Yornn for all his work on this feature.
 
 ## August 28, 2025 - PSBBN Definitive Patch v3.00 - Music Installer, Menu System, Faster Installs & More!
 
 <details>
 <summary><b>Release Notes:</b></summary>
-  
-[![PSBBN Definitive English Patch 3.0](https://github.com/user-attachments/assets/3b82d809-28d5-4675-87c2-c7f1abf96ae6)](https://www.youtube.com/watch?v=lUMKZck6G08) 
-  
+
+[![PSBBN Definitive English Patch 3.0](https://github.com/user-attachments/assets/3b82d809-28d5-4675-87c2-c7f1abf96ae6)](https://www.youtube.com/watch?v=lUMKZck6G08)
+
 **[NEW! Menu System:](#main-menu)**
 - New central menu system instead of separate scripts, making it easier to navigate the various features of the PSBBN Definitive Patch
 - Setup now runs automatically if missing dependencies are detected
@@ -84,7 +107,7 @@ Special thanks to Yornn for all his work on this feature.
 
 **[Game Installer:](#game-and-app-installer)**
 - The game installer now offers an HDTV fix for PS1 games, allowing them to display on TVs that do not support 240p
-- Bug fixes and improved Game ID extraction for ISO and VCD files.  
+- Bug fixes and improved Game ID extraction for ISO and VCD files.
 - Extracts Game ID directly from ZSO files by decompressing only part of the disc image; ZSO files no longer need to be fully decompressed or renamed, greatly improving processing time
 
 **[Extras:](#extras)**
@@ -101,7 +124,7 @@ Special thanks to Yornn for all his work on this feature.
 
 <details>
 <summary><b>Release Notes:</b></summary>
-  
+
 [![PSBBN Definitive Patch v2.11](https://github.com/user-attachments/assets/49511803-429b-4cd8-8546-40334be3f244)](https://www.youtube.com/watch?v=kgXe8rlqsr0)
 
 **PSBBN Updated to Definitive Patch v2.11**
@@ -156,60 +179,60 @@ New in Definitive Patch v2.11:
 
 **PSBBN Disk Image Updated to Version 2.10:**
 
-- Disk created with a new version of PFS Shell for full compatibility with 8 MB PFS partitions 
-- Added a direct link to the Game Collection in the Top Menu  
-- Improved boot time for users without a connected Ethernet cable  
+- Disk created with a new version of PFS Shell for full compatibility with 8 MB PFS partitions
+- Added a direct link to the Game Collection in the Top Menu
+- Improved boot time for users without a connected Ethernet cable
 - Modified the startup script to format and initialize the Music partition, allowing it to be smaller or larger than before.
-- Reduced delay before button presses are registered when booting into Linux  
-- PS2 Linux partition now uses `ext2` instead of `reiserfs`   
-- Removed ISP Settings from the Top Menu  
+- Reduced delay before button presses are registered when booting into Linux
+- PS2 Linux partition now uses `ext2` instead of `reiserfs`
+- Removed ISP Settings from the Top Menu
 - Removed Open PS2 Loader shortcut from the Navigator Menu (user can add a shortcut to their choice of game launcher manually)
 - Modified shortcuts to [LaunchELF](https://github.com/ps2homebrew/wLaunchELF) and [Launch Disc](#launch-disc)
-- Updated the About PlayStation BB Navigator page  
-- Enabled telnet access to PSBBN for development purposes  
-- Corrections to the English translation  
+- Updated the About PlayStation BB Navigator page
+- Enabled telnet access to PSBBN for development purposes
+- Corrections to the English translation
 
 **`02-PSBBN-Installer.sh`:**
 
-- Prevents the script from installing the PSBBN Definitive Patch if the version is below 2.10  
+- Prevents the script from installing the PSBBN Definitive Patch if the version is below 2.10
 - Partitions the remaining space of the first 128 GB of the drive:
-  - Music partition can now range between 1 GB and 104 GB  
-  - [POPS](#popstarter-and-virtual-memory-cards) partition can now range between 1 GB and 104 GB  
-  - Space reserved for 800 [BBNL](#bbn-launcher-bbnl) partitions  
-- Removed [POPS](#popstarter-and-virtual-memory-cards) installer (now handled by the Game Installer script)  
-- Code has been significantly cleaned up and optimized  
+  - Music partition can now range between 1 GB and 104 GB
+  - [POPS](#popstarter-and-virtual-memory-cards) partition can now range between 1 GB and 104 GB
+  - Space reserved for 800 [BBNL](#bbn-launcher-bbnl) partitions
+- Removed [POPS](#popstarter-and-virtual-memory-cards) installer (now handled by the Game Installer script)
+- Code has been significantly cleaned up and optimized
 
 **`03-Game-Installer.sh`:**
 
 - Added a warning for users running PSBBN Definitive Patch below version 2.10
-- The PS2 drive is now auto-detected  
+- The PS2 drive is now auto-detected
 - Added an option to set a custom path to the `games` folder on your PC
-- Allows new games and apps to be added without requiring a full sync  
+- Allows new games and apps to be added without requiring a full sync
 - [BBNL](#bbn-launcher-bbnl) partition size reduced from 128 MB to 8 MB, enabling up to 800 games/apps to be displayed in the Game Collection
-- Fixed a bug preventing games with superscript numbers in their titles from launching  
-- General improvements to error checking and messaging  
-- Fixed issues detecting success/failure of some `rsync` commands  
-- `rsync` now runs only when needed  
+- Fixed a bug preventing games with superscript numbers in their titles from launching
+- General improvements to error checking and messaging
+- Fixed issues detecting success/failure of some `rsync` commands
+- `rsync` now runs only when needed
 - Improved update process for [POPStarter](#popstarter-and-virtual-memory-cards), [OPL](#open-ps2-loader-opl), [NHDDL, and Neutrino](#neutrino-and-nhddl)
-- Game Installer now installs [POPS](#popstarter-and-virtual-memory-cards) binaries if missing  
-- Reduced number of commands executed with `sudo`  
-- `ELF` files are now installed in folders and include a `title.cfg`  
-- Code has been significantly cleaned up and optimized  
+- Game Installer now installs [POPS](#popstarter-and-virtual-memory-cards) binaries if missing
+- Reduced number of commands executed with `sudo`
+- `ELF` files are now installed in folders and include a `title.cfg`
+- Code has been significantly cleaned up and optimized
 
 **`list-builder.py`:**
 
-- Merged `list-builder-ps1.py` and `list-builder-ps2.py` into a single script  
-- Now extracts game IDs for both PS1 and PS2 games  
+- Merged `list-builder-ps1.py` and `list-builder-ps2.py` into a single script
+- Now extracts game IDs for both PS1 and PS2 games
 
 **`list-sorter.py`:**
 
-- Game sorting logic has been moved here from the previous list builder scripts  
-- Sorting has been significantly improved  
+- Game sorting logic has been moved here from the previous list builder scripts
+- Sorting has been significantly improved
 
 **General**
 
-- PSBBN Installer and Game Installer scripts now prevent the PC from sleeping during execution  
-- Added a check in each script to ensure it is run using Bash  
+- PSBBN Installer and Game Installer scripts now prevent the PC from sleeping during execution
+- Added a check in each script to ensure it is run using Bash
 - Updated README.md
 
 </details>
@@ -320,12 +343,12 @@ New in Definitive Patch v2.11:
   - Creates all assets and meta-data
   - Downloads game artwork from IGN
 
-</details>  
+</details>
 
 # User Guide
 The PSBBN Definitive Patch script is essential for unlocking all the new features exclusive to version 2.0 and above. The script require an x86-64 processor and a 64-bit operating system. ARM-based systems, including Apple Silicon, are not supported.
 
-PSBBN requires a Fat PS2 console (**SCPH-3000x to SCPH-500xx**) with an expansion bay and an [official Sony Network Adapter](#known-issues).  
+PSBBN requires a Fat PS2 console (**SCPH-3000x to SCPH-500xx**) with an expansion bay and an [official Sony Network Adapter](#known-issues).
 
 It is also compatible with the PS2 Slim **SCPH-700xx** model with an [IDE Resurrector](https://gusse.in/shop/ps2-modding-parts/ide-resurrector-origami-v0-7-flex-cable-for-ps2-slim-spch700xx/) or similar hardware mod and **SCPH-10000 to SCPH-18000** models with an official external HDD enclosure, as long as the drive in the enclosure has been replaced with one that is 200 GB or larger. [Additional setup is required for these consoles](#early-scph-10000–18000-and-slim-scph-700xx-consoles).
 
@@ -360,12 +383,12 @@ The recommended way to install the PSBBN Definitive Patch on Windows 10 and 11 i
 
 [![PSBBN Launcher for Windows: Easy Install & Setup](https://github.com/user-attachments/assets/981e4abc-10b0-49d2-8d52-3e19ea80650b)](https://www.youtube.com/watch?v=O5ZvJoW4oNw)
 
-**Enabling Virtualization:**  
+**Enabling Virtualization:**
 It may be necessary to enable SVM Mode (for AMD CPUs) or VT-x (for Intel CPUs) in your BIOS settings if they are not already enabled. Instructions on how to do this can be found [here](https://www.elevenforum.com/t/enable-or-disable-cpu-virtualization-in-uefi-bios-firmware-settings-on-windows-pc.4928/).
 
 Download the **PSBBN Launcher for Windows** [here](https://raw.githubusercontent.com/CosmicScale/PSBBN-Definitive-English-Patch/refs/heads/main/scripts/PSBBN-Launcher-For-Windows.ps1) (Right-click and select **Save link as**).
 
-**Set the PowerShell Execution Policy:**  
+**Set the PowerShell Execution Policy:**
 Before running the script for the first time, you must change the execution policy in PowerShell:
 1. Open a new PowerShell window from the **Start menu** by searching for **PowerShell** and select **Run as Administrator**.
 2. Type the following command and press Enter:
@@ -374,7 +397,7 @@ Before running the script for the first time, you must change the execution poli
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 ```
 
-**You are now ready to run the script:**  
+**You are now ready to run the script:**
 Right-click on `PSBBN-Launcher-For-Windows.ps1` and select **Run with PowerShell**.
 
 The script will:
@@ -382,33 +405,33 @@ The script will:
 - Prompt you to select a **drive** and `games` folder
 - Launch the **PSBBN Definitive Patch** [Main Menu](#main-menu)
 
-**Accessing the PSBBN Definitive Patch Main Menu in the Future:**  
+**Accessing the PSBBN Definitive Patch Main Menu in the Future:**
 Simply right-click on `PSBBN-Launcher-For-Windows.ps1` and select **Run with PowerShell**
 
-**NOTE:**  
+**NOTE:**
 Always exit the PSBBN Definitive Patch Main Menu by pressing `q` to quit. This ensures the drive is unmounted from WSL. If you are using a drive connected via USB, remember to also eject it from the Windows system tray.
 
 ## Main Menu
-`PSBBN-Definitive-Patch.sh` is your gateway to the PSBBN Definitive Patch. Running this script launches the main menu.  
-If this is your first time running the script or you are missing dependencies, the setup process will automatically run and install everything required.  
+`PSBBN-Definitive-Patch.sh` is your gateway to the PSBBN Definitive Patch. Running this script launches the main menu.
+If this is your first time running the script or you are missing dependencies, the setup process will automatically run and install everything required.
 
 From the main menu, you will have the following options:
 
-1. [Install PSBBN](#psbbn-installer)  
+1. [Install PSBBN](#psbbn-installer)
    Performs a fresh install of PSBBN.
 
-2. [Update PSBBN Software](#update-psbbn-software)  
+2. [Update PSBBN Software](#update-psbbn-software)
    Updates an existing install to the latest version of the PSBBN Definitive Patch.
 
-3. [Install Games and Apps](#game-and-app-installer)  
+3. [Install Games and Apps](#game-and-app-installer)
    Installs PS1 and PS2 games, plus homebrew apps.
 
-4. [Install Media](#media-installer)  
+4. [Install Media](#media-installer)
    1. [Install Music](#music-installer)
    4. [Set Media Location](#set-media-location)
    5. [Initialise Music Partition](#initialise-music-partition)
 
-5. [Optional Extras](#extras)  
+5. [Optional Extras](#extras)
    1. [Install PS2 Linux](#ps2-linux)
    2. [Install HDD-OSD (Browser 2.0)](#hdd-osd-browser-20)
    3. [Install PlayStation 2 Basic Boot Loader (PS2BBL)](#playstation-2-basic-boot-loader-ps2bbl)
@@ -446,7 +469,7 @@ Fully automates the installation of PS1 and PS2 games, as well as homebrew apps:
 
 ### Synchronize All Games and Apps
 
-The script lets you set the location of the `games` folder on your PC. Simply place your files in the `games` folder: PS2 `ISO` or `ZSO` files in the `CD`/`DVD` folders, PS1 `VCD` files in the `POPS` folder, and `ELF` or 
+The script lets you set the location of the `games` folder on your PC. Simply place your files in the `games` folder: PS2 `ISO` or `ZSO` files in the `CD`/`DVD` folders, PS1 `VCD` files in the `POPS` folder, and `ELF` or
 [SAS-compliant](#save-application-system-sas) `PSU` files in the `APPS` folder. To add or delete games and apps, just modify the contents of the `games` folder on your PC, then run the script and select `Synchronize All Games and Apps`.
 
 ### Add Additional Games and Apps
@@ -486,32 +509,32 @@ Select `Optional Extras` from the main menu and you will be presented with the f
 5. [Reassign Cross and Circle Buttons](#reassign-cross-and-circle-buttons)
 
 ### PS2 Linux
-PlayStation 2 Linux is an official kit from Sony that turned the PS2 into a Linux-based personal computer.  
+PlayStation 2 Linux is an official kit from Sony that turned the PS2 into a Linux-based personal computer.
 The `Install PS2 Linux` option allows you to install or reinstall PS2 Linux.
 
 To install PS2 Linux you need at least 3 GB of free space on your PS2 drive. During installation, you will be asked to set the size of your home directory (used for storing personal files and apps).
 
-When reinstalling Linux:  
-- If Linux came pre-installed with your version of the PSBBN Definitive Patch, all PS2 Linux data will be erased, including your home directory.  
+When reinstalling Linux:
+- If Linux came pre-installed with your version of the PSBBN Definitive Patch, all PS2 Linux data will be erased, including your home directory.
 - If you installed or reinstalled Linux using this menu, only the system files will be reinstalled — your personal files in the home directory will not be affected.
 
-**Notes:**  
-- To launch PS2 Linux, power on your PS2 console, wait for the `PlayStation 2` logo, then hold any button on the controller until the spinning orbs stop. PS2 Linux will then boot.  
-- PS2 Linux requires a USB keyboard; a mouse is optional but recommended.  
-- The `root` password is `password`. There is also a `ps2` user account with the password `password`.  
-- To start a graphical interface, type `startx` at the command line.  
-- Launching the `Dillo` web browser will open a mirror of the old official PS2 Linux website, where you can find a wide range of software to download and try.  
+**Notes:**
+- To launch PS2 Linux, power on your PS2 console, wait for the `PlayStation 2` logo, then hold any button on the controller until the spinning orbs stop. PS2 Linux will then boot.
+- PS2 Linux requires a USB keyboard; a mouse is optional but recommended.
+- The `root` password is `password`. There is also a `ps2` user account with the password `password`.
+- To start a graphical interface, type `startx` at the command line.
+- Launching the `Dillo` web browser will open a mirror of the old official PS2 Linux website, where you can find a wide range of software to download and try.
 
 ### HDD-OSD (Browser 2.0)
 `HDD-OSD (Browser 2.0)` is an enhanced version of the PlayStation 2’s system menu that adds hard drive support, letting you manage software, save data, and launch games/apps directly from the HDD. It is fully compatible with both the official Sony Network Adapter and 3rd-party HDD adapters.
 
 `HDD-OSD (Browser 2.0)` can be launched from the PSBBN Game Channel, or, if [PlayStation 2 Basic Boot Loader (PS2BBL)](#playstation-2-basic-boot-loader-ps2bbl) is installed, by holding down the `cross` button while the console starts up.
 
-Games installed with the [Game Installer](#game-and-app-installer) will appear in the Browser represented by 3D icons modelled after the game case. Apps downloaded from the [Save Application System Apps Archive](https://ps2wiki.github.io/sas-apps-archive/) will also be represented by unique icons. [POPStarter virtual memory cards](#popstarter-and-virtual-memory-cards) also get unique icons.  
+Games installed with the [Game Installer](#game-and-app-installer) will appear in the Browser represented by 3D icons modelled after the game case. Apps downloaded from the [Save Application System Apps Archive](https://ps2wiki.github.io/sas-apps-archive/) will also be represented by unique icons. [POPStarter virtual memory cards](#popstarter-and-virtual-memory-cards) also get unique icons.
 
-Game and VMC icons are downloaded from, and contributed to, the [HDD-OSD Icon Database](https://github.com/CosmicScale/HDD-OSD-Icon-Database).  
+Game and VMC icons are downloaded from, and contributed to, the [HDD-OSD Icon Database](https://github.com/CosmicScale/HDD-OSD-Icon-Database).
 
-**Note:**  
+**Note:**
 `HDD-OSD (Browser 2.0)` is not compatible with drives larger than 1 TB.
 
 ### PlayStation 2 Basic Boot Loader (PS2BBL)
@@ -621,17 +644,17 @@ An application called [BBN Launcher](#bbn-launcher-bbnl) resides on the APA part
 - Various small adjustments and corrections to the translation throughout.
 
 **v1.1.1 - 8th March 2024**
-**NEW**  
+**NEW**
 - X11 has been set to run in English. The restore, move, resize, minimize, and close buttons now show in English while using the NetFront web browser. When saving files, time stamps now also display in English formatting.
 
 **v1.1 - 5th March 2024**
-**NEW**  
+**NEW**
 - The NetFront web browser is now in English. The browser can be accessed by going through the "Confirm/Change" network setting dialogs, then selecting "Change router settings".
 - Atok user manual has been translated.
 
-**BUG FIXES**  
-- **General**: When a game disc was inserted while on the Top Menu, it would cause the console to freeze.  
-- **Music Channel**: The number of times a track had been checked-out to a MiniDisc recorder was not displayed correctly.  
+**BUG FIXES**
+- **General**: When a game disc was inserted while on the Top Menu, it would cause the console to freeze.
+- **Music Channel**: The number of times a track had been checked-out to a MiniDisc recorder was not displayed correctly.
 - A number of typos have been fixed.
 
 **v1.0 - 21st September 2023**
@@ -676,8 +699,8 @@ There are two ways to install this English patch:
 4. Connect the USB flash drive and a USB keyboard to the USB ports on the front of your PS2 console.
 5. Turn the PS2 console on with your Free McBoot Memory Card inserted and load wLaunchELF.
 6. Load `kloader3.0.elf` from the USB flash drive.
-7. Eventually, you will be presented with a login prompt:  
-     Type `root` and press enter.  
+7. Eventually, you will be presented with a login prompt:
+     Type `root` and press enter.
      Type `install` and press enter.
 8. When you see the text `INIT: no more processes left in this runlevel`, hold the standby button down until the console powers off.
 
@@ -700,10 +723,10 @@ Installing with Sony Utility Discs Compilation 3:
 6. Launch the **Sony Utility Discs Compilation 3** DVD on your console. **SCPH-500xx consoles only:** Insert your newly burnt **Sony Utility Discs Compilation 3** DVD into the DVD drive on your PS2 console. On the first screen of wLaunchELF, press the `circle` button for **FileBrowser**, then select **MISC > PS2Disc**. The DVD will launch. On all other model consoles, launch the **Sony Utility Discs Compilation 3** DVD any way you can (e.g. Mod chip/Swap disc).
 7. After the disc loads, select **HDD Utility Discs > PlayStation BB Navigator Version 0.32** from the menu to begin the installation.
 
-**Installation:**  
+**Installation:**
 There's an excellent guide [here](https://bungiefan.tripod.com/psbbninstall_01.html) that talks you through the Japanese install. Because we have already formatted the hard drive, during the install you will be presented with a [different screen](https://bungiefan.tripod.com/psbbninstall_02.html). It's important that you select the 3rd install option. This will install PSBBN without re-formatting the HDD. When the install is complete you will be instructed to remove the DVD, do so but also remove your Free McBoot Memory Card, before pressing the `circle` button.
 
-**Network Settings:**  
+**Network Settings:**
 You will be asked to enter your network settings. Make sure your Ethernet cable is connected. Everything is still in Japanese, but it's relatively straightforward:
 1. Press the `circle` button on the first screen.
 2. On the next screen, select the **bottom** option, "Do not use PPPoE" and press `circle`.
@@ -715,9 +738,9 @@ You will be asked to enter your network settings. Make sure your Ethernet cable 
 
 For your efforts you will be given a DNAS error. This is to be expected. We'll fix that next. Press `cross` and feel free to explore your fresh install of the Japanese PSBBN.
 
-**Disable DNAS Authentication:**  
-1. Turn off the console and put your Free McBoot Memory Card back into a memory card slot.  
-2. Turn the console on and load wLaunchELF.  
+**Disable DNAS Authentication:**
+1. Turn off the console and put your Free McBoot Memory Card back into a memory card slot.
+2. Turn the console on and load wLaunchELF.
 3. Go to **FileBrowser**. Navigate to `hdd0:/__contents/bn.conf/` and delete the file `default_isp.dat`. This will disable the DNAS checks.
 
 **Please Note**
@@ -725,7 +748,7 @@ Before installing the English patch, you **must** power off your console to stan
 
 ## Notes
 
-\* Also compatible with the PS2 Slim SCPH-700xx models with an [IDE Resurrector](https://gusse.in/shop/ps2-modding-parts/ide-resurrector-origami-v0-7-flex-cable-for-ps2-slim-spch700xx/) or similar hardware mod. [PS2 HDD RAW Image Install](#ps2-hdd-raw-image-install) is not compatible with early model Japanese PS2 consoles (SCPH-10000, SCPH-15000 and SCPH-18000) that have an external HDD due to space limitations (unless the stock drive is replaced with a 120+ GB drive). When [patching an existing PSBBN install](#patch-an-existing-psbbn-install), Kloader might have compatibility issues with early model Japanese PS2 consoles (SCPH-10000, SCPH-15000 and SCPH-18000).  
+\* Also compatible with the PS2 Slim SCPH-700xx models with an [IDE Resurrector](https://gusse.in/shop/ps2-modding-parts/ide-resurrector-origami-v0-7-flex-cable-for-ps2-slim-spch700xx/) or similar hardware mod. [PS2 HDD RAW Image Install](#ps2-hdd-raw-image-install) is not compatible with early model Japanese PS2 consoles (SCPH-10000, SCPH-15000 and SCPH-18000) that have an external HDD due to space limitations (unless the stock drive is replaced with a 120+ GB drive). When [patching an existing PSBBN install](#patch-an-existing-psbbn-install), Kloader might have compatibility issues with early model Japanese PS2 consoles (SCPH-10000, SCPH-15000 and SCPH-18000).
 - Use OPL-Launcher to launch PS2 games from the Game Channel. More details can be found [here](https://github.com/ps2homebrew/OPL-Launcher).
 - Lacks support for large HDDs, drives larger than 130 GB cannot be taken full advantage of. PSBBN can only see the first 130,999 MB of data on your HDD/SSD (as reported by wLaunchELF). If there is 131,000 MB or more on your HDD/SSD, PSBBN will fail to launch. Delete data so there is less than 131,000 MB used, and PSBBN will launch again. Be extra careful if you have installed via the [PS2 HDD RAW Image](#ps2-hdd-raw-image-install) on a drive larger than 120 GB, going over 130,999 MB will corrupt the drive.
 - You may need to manually change the title of your "Favorite" folders if they were created before you [Patched an existing PSBBN install](#patch-an-existing-psbbn-install).
@@ -773,9 +796,9 @@ If games do not appear in the games list in [NHDDL](#neutrino-and-nhddl) or [OPL
 
 # Known Issues
 - Using a Definitive Patch version older than 2.10 with the latest game installer may corrupt APA partitions, rendering PSBBN unbootable. If you are running an older version, it is highly recommended that you upgrade by selecting [Install PSBBN](#psbbn-installer) from the main menu.
-- PSBBN only supports dates up to the end of 2030. When setting the time and date, the year must be set to 2030 or below.  
-- PSBBN will freeze when launching games/apps if a mod chip is active. To use PSBBN, mod chips must be disabled.  
-- PSBBN will freeze at the "PlayStation 2" logo when booting, if a 3rd party, unofficial HDD adapter is used. An official Sony Network Adapter is required.  
+- PSBBN only supports dates up to the end of 2030. When setting the time and date, the year must be set to 2030 or below.
+- PSBBN will freeze when launching games/apps if a mod chip is active. To use PSBBN, mod chips must be disabled.
+- PSBBN will freeze at the "PlayStation 2" logo when booting, if a 3rd party, unofficial HDD adapter is used. An official Sony Network Adapter is required.
 - When using a drive larger than 2 TB, the first 128 GB will be allocated to the PlayStation File System (PFS), and the next 2 TB will be formatted as an exFAT partition. Any remaining space beyond that will be unusable.
 - [OPL](#open-ps2-loader-opl) cannot read settings saved on the exFAT partition of the internal drive. Settings should be saved to a PS2 memory card. If you have a MemCard Pro 2 or SD2PSX, it is recommended that you save your OPL settings to a standard PS2 memory card inserted in slot 2.
 - `wLaunchELF` and other native PS2 apps cannot create PFS partitions on the PS2 drive. New partitions should only be created using the version of `PFS Shell` included with this project. When creating additional partitions, care must be taken to ensure PFS partitions do not exceed the first 128 GB of drive space, or the drive will become corrupted.
@@ -783,7 +806,7 @@ If games do not appear in the games list in [NHDDL](#neutrino-and-nhddl) or [OPL
 - MiniDisc support is broken on patch version 2.10. I hope to fix this in a future update
 - The PS2 DVD Remote Control can behave erratically if no controller is plugged into Controller Port 1
 
-\* Instances in feega where some Japanese text couldn't be translated due to it being hard-coded in an encrypted file. Atok software has not been translated.  
+\* Instances in feega where some Japanese text couldn't be translated due to it being hard-coded in an encrypted file. Atok software has not been translated.
 \** The default on-screen keyboard is set to Japanese. However, a US English on-screen keyboard has been added, though you’ll need to press the `SELECT` button multiple times to switch to it. There's a bug where spacebar doesn't work on the US English on-screen keyboard, but you can enter a space by pressing the `triangle` button on the controller instead.
 
 # Credits
@@ -821,9 +844,9 @@ PS2 Homebrew Community:
 - Thanks to everyone on the [Save Application System team](https://ps2wiki.github.io/documentation/homebrew/PS2-App-System/SAS/index.html#Credits) for their ongoing work on the [Save Application System Apps Archive](https://ps2wiki.github.io/sas-apps-archive/)
 - Special thanks to [pcm720](https://github.com/pcm720) for patching `osdboot.elf` to bypass the CRC security check
 
-Third-Party Libraries & Binaries:  
+Third-Party Libraries & Binaries:
 - `vmlinux` **BB Navigator kernel (Linux 2.4.17)** – Source code available [here](https://github.com/rickgaiser/linux-2.4.17-ps2)
-- **SQLite v2.8.17** from [sqlite.org](https://www.sqlite.org) 
+- **SQLite v2.8.17** from [sqlite.org](https://www.sqlite.org)
 - **mkfs.exfat (exfatprogs 1.2.2)** from [exfatprogs](https://github.com/exfatprogs/exfatprogs)
 
 All libraries and utilities are open-source and used in accordance with their respective licenses.
