@@ -168,7 +168,7 @@ clean_up() {
 
 exit_script() {
     prevent_sleep_stop
-    
+
     clean_up
     if [[ -n "$path_arg" ]]; then
         cp "${LOG_FILE}" "${path_arg}" > /dev/null 2>&1
@@ -230,7 +230,7 @@ MOUNT_OPL() {
     # Create necessary folders if they don't exist
     for folder in APPS ART CFG CHT LNG THM VMC CD DVD; do
         dir="${OPL}/${folder}"
-        [[ -d "$dir" ]] || mkdir -p "$dir" || { 
+        [[ -d "$dir" ]] || mkdir -p "$dir" || {
             error_msg "Error" "Failed to create $dir."
         }
     done
@@ -293,7 +293,7 @@ process_psu_files() {
 
     if find "$target_dir" -maxdepth 1 -type f \( -iname "*.psu" \) | grep -q .; then
         echo "Processing PSU files in: $target_dir" | tee -a "${LOG_FILE}"
-        
+
         for file in "$target_dir"/*.psu "$target_dir"/*.PSU; do
             [ -e "$file" ] || continue  # Skip if no PSU files exist
 
@@ -455,7 +455,7 @@ CREATE_VMC() {
             cp "${ICONS_DIR}/ico/vmc/VMC.ico" ./list.ico
             echo "$game_id $title" >> "${MISSING_VMC}"
         fi
-        
+
         VMC_TITLE "$title"
 
         # Prepare disc list for DISCS.TXT
@@ -684,8 +684,8 @@ update_apps() {
             cp -rf "${ASSETS_DIR}/osdmenu/"{hosdmenu.elf,version.txt} "${STORAGE_DIR}/__system/osdmenu"
             app_success_check "$name"
             exit_code=$?
-            BOOTSTRAP
-            apa_checksum_fix
+            # BOOTSTRAP
+            # apa_checksum_fix
         else
             rsync $options "$source" "$destination" >>"${LOG_FILE}" 2>&1
             exit_code=${PIPESTATUS[0]}
@@ -701,7 +701,7 @@ install_pops() {
         echo "POPS-binaries are already installed."| tee -a "${LOG_FILE}"
     else
         echo "Checking for POPS binaries..." | tee -a "${LOG_FILE}"
-    
+
     # Check POPS files exist
         if [[ -f "${ASSETS_DIR}/POPS-binaries-main/POPS.ELF" && -f "${ASSETS_DIR}/POPS-binaries-main/IOPRP252.IMG" ]]; then
             echo | tee -a "${LOG_FILE}"
@@ -809,7 +809,7 @@ install_elf() {
 
                 # List of terms to ensure spaces before and after
                 terms=("3d" "3D" "ps2" "PS2" "ps1" "PS1")
-    
+
                 # Loop over the terms
                 for term in "${terms[@]}"; do
                     input_str="${input_str//${term}/ ${term}}"  # Ensure space before the term
@@ -900,7 +900,7 @@ activate_python() {
         echo -n "Failed to activate the Python virtual environment. Retrying..." | tee -a "${LOG_FILE}"
         sleep 2
         echo | tee -a "${LOG_FILE}"
-    
+
         if ! source "${SCRIPTS_DIR}/venv/bin/activate" 2>>"${LOG_FILE}"; then
             error_msg "Error" "Failed to activate the Python virtual environment."
         fi
@@ -1041,18 +1041,18 @@ create_info_sys() {
 title = $title
 title_id = $title_id
 title_sub_id = 0
-release_date = 
-developer_id = 
+release_date =
+developer_id =
 publisher_id = $publisher
-note = 
-content_web = 
+note =
+content_web =
 image_topviewflag = 0
 image_type = 0
 image_count = 1
 image_viewsec = 600
 copyright_viewflag = 0
 copyright_imgcount = 0
-genre = 
+genre =
 parental_lock = 1
 effective_date = 0
 expire_date = 0
@@ -1138,7 +1138,7 @@ APP_ART() {
         echo "Artwork not found locally for $title_id. Attempting to download from the PSBBN art database..." | tee -a "${LOG_FILE}"
         wget --quiet --timeout=10 --tries=3 --output-document="$png_file" \
         "https://raw.githubusercontent.com/CosmicScale/psbbn-art-database/main/apps/${title_id}.png"
-        
+
         if [[ -s "$png_file" ]]; then
             echo "[✓] Successfully downloaded artwork for $title_id" | tee -a "${LOG_FILE}"
             if [ "$OS" = "PSBBN" ]; then
@@ -1263,12 +1263,12 @@ unmount_apa(){
 SPLASH() {
     clear
     cat << "EOF"
-                  _____                        _____          _        _ _ 
-                 |  __ \                      |_   _|        | |      | | |          
-                 | |  \/ __ _ _ __ ___   ___    | | _ __  ___| |_ __ _| | | ___ _ __ 
+                  _____                        _____          _        _ _
+                 |  __ \                      |_   _|        | |      | | |
+                 | |  \/ __ _ _ __ ___   ___    | | _ __  ___| |_ __ _| | | ___ _ __
                  | | __ / _` | '_ ` _ \ / _ \   | || '_ \/ __| __/ _` | | |/ _ \ '__|
-                 | |_\ \ (_| | | | | | |  __/  _| || | | \__ \ || (_| | | |  __/ |   
-                  \____/\__,_|_| |_| |_|\___|  \___/_| |_|___/\__\__,_|_|_|\___|_|   
+                 | |_\ \ (_| | | | | | |  __/  _| || | | \__ \ || (_| | | |  __/ |
+                  \____/\__,_|_| |_| |_|\___|  \___/_| |_|___/\__\__,_|_|_|\___|_|
 
 
 EOF
@@ -1440,7 +1440,7 @@ fi
 # Create necessary folders if they don't exist
 for folder in APPS ART CFG CHT LNG THM VMC POPS CD DVD; do
     dir="${GAMES_PATH}/${folder}"
-    [[ -d "$dir" ]] || mkdir -p "$dir" || { 
+    [[ -d "$dir" ]] || mkdir -p "$dir" || {
         error_msg "Error" "Failed to create $dir. Make sure you have write permissions to $GAMES_PATH"
     }
 done
@@ -1649,11 +1649,11 @@ if [ -n "$delete_partition" ]; then
     HDL_TOC
 
     delete_partition=$(grep -o 'PP\.[^ ]\+' "$hdl_output")
-    
+
     if [ -n "$delete_partition" ]; then
         echo | tee -a "${LOG_FILE}"
         echo "Unable to delete the following partitions:"
-        echo $delete_partition 
+        echo $delete_partition
         error_msg "Error" "Failed to delete existing PP partitions."
     else
         echo "Existing PP partitions sucessfully deleted." | tee -a "${LOG_FILE}"
@@ -1938,7 +1938,7 @@ else
             mv "$dir/list.icn" "$dir/list.ico" 2>>"${LOG_FILE}" || error_msg "Error" "Failed to convert $dir/list.icn."
             echo "Converted list.icn: $dir/list.ico" | tee -a "${LOG_FILE}"
             [ -f "$dir/del.icn" ] && mv "$dir/del.icn" "$dir/del.ico" | echo "Converted del.icn: $dir/del.ico" | tee -a "${LOG_FILE}"
-        
+
         else
             echo "list.icn not found in $dir." | tee -a "${LOG_FILE}"
             cp "${ICONS_DIR}/ico/app.ico" "$dir/list.ico" 2>>"${LOG_FILE}" || error_msg "Error" "Failed to create $dir/list.ico. See ${LOG_FILE} for details."
@@ -2226,7 +2226,7 @@ if [ -f "$ALL_GAMES" ]; then
     while IFS='|' read -r title game_id publisher disc_type file_name <&3; do
 
         ico_file="${ICONS_DIR}/ico/$game_id.ico"
-        
+
         if [[ ! -s "$ico_file" ]]; then
             # Attempt to download icon using wget
             echo -n "Icon not found locally for $game_id. Attempting to download from the HDD-OSD icon database..." | tee -a "${LOG_FILE}"
@@ -2326,7 +2326,7 @@ if [ -f "$ALL_GAMES" ]; then
         exec 3< "$PS1_LIST"
         while IFS='|' read -r title game_id publisher disc_type file_name <&3; do
                 ico_file="${ICONS_DIR}/ico/vmc/$game_id.ico"
-        
+
                 if [[ ! -s "$ico_file" ]]; then
                     # Attempt to download icon using wget
                     echo -n "VMC icon not found locally for $game_id. Attempting to download from the HDD-OSD icon database..." | tee -a "${LOG_FILE}"
@@ -2374,7 +2374,7 @@ if [ -f "$ALL_GAMES" ]; then
     exec 3< "$ALL_GAMES"
     while IFS='|' read -r title game_id publisher disc_type file_name <&3; do
         echo | tee -a "${LOG_FILE}"
-        echo "Processing $title..." 
+        echo "Processing $title..."
         # Create a sub-folder named after the game_id
         game_dir="$ICONS_DIR/$game_id"
         mkdir -p "$game_dir" 2>>"${LOG_FILE}" || error_msg "Error" "Failed to create $dir."
@@ -2512,7 +2512,7 @@ for dir in "${dirs[@]}"; do
         # Create the subdirectory in the destination path using the directory name
         folder_name=$(basename "$dir")
         dest_dir="${OPL}/$folder_name"
-        
+
         # Copy non-hidden files to the corresponding destination subdirectory
         if [ "$folder_name" == "CFG" ] || [ "$folder_name" == "VMC" ]; then
             echo "Copying OPL $folder_name files..." | tee -a "${LOG_FILE}"
@@ -2771,7 +2771,7 @@ EOL
 
         create_info_sys "$title" "$title_id" "$publisher"
         create_icon_sys "$title" "$publisher"
-    
+
         COMMANDS="device ${DEVICE}\n"
         COMMANDS+="mkpart PP.SCPN_601.60.PSBBN 8M PFS\n"
         COMMANDS+="mount PP.SCPN_601.60.PSBBN\n"
@@ -2817,7 +2817,7 @@ EOL
 
         create_info_sys "$title" "$title_id" "$publisher"
         create_icon_sys "$title" " "
-    
+
         COMMANDS="device ${DEVICE}\n"
         COMMANDS+="mkpart PP.HOSDMENU.HIDDEN 8M PFS\n"
         COMMANDS+="mount PP.HOSDMENU.HIDDEN\n"
@@ -2993,7 +2993,7 @@ if [ -d "${ICONS_DIR}/ico/tmp/vmc" ] && [ -z "$(ls -A "${ICONS_DIR}/ico/tmp/vmc"
     rmdir "${ICONS_DIR}/ico/tmp/vmc"
 fi
 zip -r "${ARTWORK_DIR}/tmp/ico.zip" * >/dev/null 2>&1
-cd "${ARTWORK_DIR}/tmp/" 
+cd "${ARTWORK_DIR}/tmp/"
 zip -r "${ARTWORK_DIR}/tmp/art.zip" * >/dev/null 2>&1
 
 if [ -f "${ARTWORK_DIR}/tmp/art.zip" ]; then

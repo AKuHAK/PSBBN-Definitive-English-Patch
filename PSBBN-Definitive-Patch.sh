@@ -293,10 +293,10 @@ option_six() {
 SPLASH() {
     clear
     cat << "EOF"
-______  _________________ _   _  ______      __ _       _ _   _            ______     _       _     
-| ___ \/  ___| ___ \ ___ \ \ | | |  _  \    / _(_)     (_) | (_)           | ___ \   | |     | |    
-| |_/ /\ `--.| |_/ / |_/ /  \| | | | | |___| |_ _ _ __  _| |_ ___   _____  | |_/ /_ _| |_ ___| |__  
-|  __/  `--. \ ___ \ ___ \ . ` | | | | / _ \  _| | '_ \| | __| \ \ / / _ \ |  __/ _` | __/ __| '_ \ 
+______  _________________ _   _  ______      __ _       _ _   _            ______     _       _
+| ___ \/  ___| ___ \ ___ \ \ | | |  _  \    / _(_)     (_) | (_)           | ___ \   | |     | |
+| |_/ /\ `--.| |_/ / |_/ /  \| | | | | |___| |_ _ _ __  _| |_ ___   _____  | |_/ /_ _| |_ ___| |__
+|  __/  `--. \ ___ \ ___ \ . ` | | | | / _ \  _| | '_ \| | __| \ \ / / _ \ |  __/ _` | __/ __| '_ \
 | |    /\__/ / |_/ / |_/ / |\  | | |/ /  __/ | | | | | | | |_| |\ V /  __/ | | | (_| | || (__| | | |
 \_|    \____/\____/\____/\_| \_/ |___/ \___|_| |_|_| |_|_|\__|_| \_/ \___| \_|  \__,_|\__\___|_| |_|
 
@@ -317,7 +317,7 @@ display_menu() {
                4) Install Games and Apps
                5) Install Media
                6) Optional Extras
-                                     
+
                q) Quit
 
 EOF
@@ -388,7 +388,7 @@ if ! check_dep; then
     if ! "${TOOLKIT_PATH}/scripts/Setup.sh"; then
         exit 1
     else
-        check_dep || error_msg "Dependencies still missing after setup." 
+        check_dep || error_msg "Dependencies still missing after setup."
     fi
 fi
 
@@ -402,21 +402,21 @@ while true; do
         1)
             option_one
             ;;
-        2)
-            option_two
-            ;;
-        3)
-            option_three
-            ;;
-        4)
-            option_four
-            ;;
-        5)
-            option_five
-            ;;
-        6)
-            option_six
-            ;;
+        # 2)
+        #     option_two
+        #     ;;
+        # 3)
+        #     option_three
+        #     ;;
+        # 4)
+        #     option_four
+        #     ;;
+        # 5)
+        #     option_five
+        #     ;;
+        # 6)
+        #     option_six
+        #     ;;
         q|Q)
             clear
             break

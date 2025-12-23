@@ -21,10 +21,10 @@ $wslLabel = "PSBBN"
 $oplVolumeName = "OPL"
 
 # a list of subfolders to be created in the main folder if missing
-$defaultFolders = @('DVD', 'CD', 'POPS', 'APPS', 'music', 'movie', 'photo')
+$defaultFolders = @('DVD', 'CD', 'APPS', 'music', 'movie', 'photo')
 
 # the specific git branch to be checked out
-$gitBranch = "main"
+$gitBranch = "my"
 
 # the console size that is set at the start of the script
 $consoleWidth = 100
@@ -34,7 +34,7 @@ $consoleHeight = 45
 $pathFilename = "path.cfg"
 
 # the minimum disk size allowed to be picked, in gigabytes
-$minimumDiskSize = 31
+$minimumDiskSize = 15
 
 # --- DO NOT MODIFY THE VARIABLES BELOW ---
 
@@ -68,7 +68,7 @@ function main {
   clear
   printTitle
   Write-Host "Prepare Windows to run the PSBBN scripts.`n"
-  
+
   # check the minimum windows build version necessary for wsl
   $buildNumber = [System.Environment]::OSVersion.Version.Build
   if ($buildNumber -lt 19041) {
@@ -167,7 +167,7 @@ function main {
       `&`& git checkout $gitBranch `
       `&`& git pull --ff-only `
     `) `
-    `|`| git clone -b $gitBranch https://github.com/CosmicScale/PSBBN-Definitive-English-Patch.git
+    `|`| git clone -b $gitBranch https://github.com/AKuHAK/PSBBN-Definitive-English-Patch.git
 
   if (-Not ($isWslInstalled)) {
     Write-Host "------- Linux magic finishes ---------`n"
@@ -272,7 +272,7 @@ function diskPicker {
     @{Label="Size";Expression={("{0:N2}" -f ($_.Size / 1GB)).ToString() + " GB"}}, `
     SerialNumber, `
     @{Label="";Expression={$disksExtras[$_.Number]}}
-  
+
   if (($global:diskList | Where-Object -FilterScript {isTooSmall($_)}).Count -gt 0) {
     Write-Host "ℹ️ PSBBN requires a disk with a minimum capacity of 200GB.`n" -ForegroundColor Yellow
   }
@@ -475,7 +475,6 @@ function getTargetFolder {
   Write-Host "
 Before you continue, you can fill this folder with your games and other media:
     - put PS2 games in /DVD or /CD (.iso or .zso files)
-    - put PS1 games in /POPS (must be .vcd files)
     - put homebrew in /APPS (.elf or SAS-compliant .psu files)
     - put music in /music (.mp3, .m4a, .flac, or .ogg files)
 

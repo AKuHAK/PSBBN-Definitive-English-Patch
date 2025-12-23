@@ -108,7 +108,7 @@ clean_up() {
 
     # Clean up directories and temp files
     sudo rm -rf /tmp/{apa_header_checksum.bin,apa_header_full.bin,apajail_magic_number.bin,apa_index.xz,gpt_2nd.xz} >> "${LOG_FILE}" 2>&1
-    
+
     # Abort if any failures occurred
     if [ "$failure" -ne 0 ]; then
         error_msg "Cleanup error(s) occurred. Aborting."
@@ -176,7 +176,7 @@ BOOTSTRAP() {
 
 CHECK_PARTITIONS() {
 # Run the command and capture output
-    apa_checksum_fix
+    # apa_checksum_fix
     TOC_OUTPUT=$(sudo "${HDL_DUMP}" toc "${DEVICE}")
     STATUS=$?
 
@@ -298,9 +298,9 @@ download_files() {
 SPLASH(){
     clear
         cat << "EOF"
-      _   _ _____ ______________  ___                   _____          _        _ _ 
+      _   _ _____ ______________  ___                   _____          _        _ _
      | | | |  _  /  ___|  _  \  \/  |                  |_   _|        | |      | | |
-     | |_| | | | \ `--.| | | | .  . | ___ _ __  _   _    | | _ __  ___| |_ __ _| | | ___ _ __ 
+     | |_| | | | \ `--.| | | | .  . | ___ _ __  _   _    | | _ __  ___| |_ __ _| | | ___ _ __
      |  _  | | | |`--. \ | | | |\/| |/ _ \ '_ \| | | |   | || '_ \/ __| __/ _` | | |/ _ \ '__|
      | | | \ \_/ /\__/ / |/ /| |  | |  __/ | | | |_| |  _| || | | \__ \ || (_| | | |  __/ |
      \_| |_/\___/\____/|___/ \_|  |_/\___|_| |_|\__,_|  \___/_| |_|___/\__\__,_|_|_|\___|_|
@@ -358,9 +358,9 @@ if [ -z "$DEVICE" ]; then
         SPLASH
         lsblk -dp -o NAME,MODEL,SIZE,SERIAL | tee -a "${LOG_FILE}"
         echo | tee -a "${LOG_FILE}"
-        
+
         read -p "Choose your PS2 HDD from the list above (e.g., /dev/sdx): " DEVICE
-        
+
         # Check if the device exists
         if [[ -n "$DEVICE" ]] && lsblk -dp -n -o NAME | grep -q "^$DEVICE$"; then
             break
@@ -372,13 +372,13 @@ if [ -z "$DEVICE" ]; then
     done
     drive_model=$(lsblk -ndo MODEL,SIZE,SERIAL "$DEVICE" | xargs)
 fi
-    
+
 # Check the size of the chosen device
 SIZE_CHECK=$(lsblk -o NAME,SIZE -b | grep -w $(basename $DEVICE) | awk '{print $2}')
 
 # Convert size to GB
 size_gb=$(echo "$SIZE_CHECK / 1000000000" | bc)
-        
+
 if (( size_gb < 32 )); then
     error_msg "Device is $size_gb GB. Required minimum is 32 GB."
 else
@@ -565,7 +565,7 @@ ps1drv_use_ps1vn = 1
 app_gameid = 1
 EOL
 
-BOOTSTRAP
+# BOOTSTRAP
 clean_up
 echo | tee -a "${LOG_FILE}"
 

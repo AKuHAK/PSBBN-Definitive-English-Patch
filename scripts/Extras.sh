@@ -278,7 +278,7 @@ CHECK_PARTITIONS() {
     fi
 
     # List of required partitions
-    required=(__linux.1 __linux.4 __linux.5 __linux.6 __linux.7 __linux.8 __linux.9 __contents __system __sysconf __.POPS __common)
+    required=(__linux.1 __linux.4 __linux.5 __linux.6 __linux.7 __linux.8 __contents __system __sysconf __common)
 
     # Check all required partitions
     for part in "${required[@]}"; do
@@ -322,14 +322,14 @@ AVAILABLE_SPACE(){
 SWAP_SPLASH(){
     clear
     cat << "EOF"
-            ______                   _              ______       _   _                  
-            | ___ \                 (_)             | ___ \     | | | |                 
-            | |_/ /___  __ _ ___ ___ _  __ _ _ __   | |_/ /_   _| |_| |_ ___  _ __  ___ 
+            ______                   _              ______       _   _
+            | ___ \                 (_)             | ___ \     | | | |
+            | |_/ /___  __ _ ___ ___ _  __ _ _ __   | |_/ /_   _| |_| |_ ___  _ __  ___
             |    // _ \/ _` / __/ __| |/ _` | '_ \  | ___ \ | | | __| __/ _ \| '_ \/ __|
             | |\ \  __/ (_| \__ \__ \ | (_| | | | | | |_/ / |_| | |_| || (_) | | | \__ \
             \_| \_\___|\__,_|___/___/_|\__, |_| |_| \____/ \__,_|\__|\__\___/|_| |_|___/
-                                        __/ |                                           
-                                       |___/    
+                                        __/ |
+                                       |___/
 
 
 EOF
@@ -339,16 +339,16 @@ LINUX_SPLASH(){
     clear
     cat << "EOF"
 
-                          ______  _____  _____   _     _                  
-                          | ___ \/  ___|/ __  \ | |   (_)                 
+                          ______  _____  _____   _     _
+                          | ___ \/  ___|/ __  \ | |   (_)
                           | |_/ /\ `--. `' / /' | |    _ _ __  _   ___  __
                           |  __/  `--. \  / /   | |   | | '_ \| | | \ \/ /
-                          | |    /\__/ /./ /___ | |___| | | | | |_| |>  < 
+                          | |    /\__/ /./ /___ | |___| | | | | |_| |>  <
                           \_|    \____/ \_____/ \_____/_|_| |_|\__,_/_/\_\
 
 
 EOF
-}                         
+}
 
 # Function for Option 1 - Install PS2 Linux
 option_one() {
@@ -359,10 +359,10 @@ option_one() {
 
     detect_drive   && \
     MOUNT_OPL || return 1
-    
+
     psbbn_version=$(head -n 1 "$OPL/version.txt" 2>/dev/null)
     APA_SIZE=$(awk -F' *= *' '$1=="APA_SIZE"{print $2}' "${OPL}/version.txt")
-    
+
     UNMOUNT_OPL || return 1
 
     version_check="4.0.0"
@@ -378,7 +378,7 @@ option_one() {
             while true; do
                 LINUX_SPLASH
                 echo "               Linux is already installed on your PS2. Do you want to reinstall it?" | tee -a "${LOG_FILE}"
-                
+
                 if cat "${hdl_output}" | grep -q '\b__linux\.10\b'; then
                     echo
                     echo "               - All Linux system files will be reinstalled." | tee -a "${LOG_FILE}"
@@ -392,7 +392,7 @@ option_one() {
                     echo
                     echo "               ===================================================================="
                 fi
-                
+
                 echo
                 read -p "               Reinstall PS2 Linux? (y/n): " answer
                 case "$answer" in
@@ -566,9 +566,9 @@ option_two() {
     MOUNT_OPL   || return 1
 
     SWAP_SPLASH
-    
+
     psbbn_version=$(head -n 1 "$OPL/version.txt" 2>/dev/null)
-    
+
     UNMOUNT_OPL || return 1
 
     if [[ "$(printf '%s\n' "$psbbn_version" "2.10" | sort -V | head -n1)" != "2.10" ]]; then
@@ -593,7 +593,7 @@ option_two() {
     ls -l /dev/mapper >> "${LOG_FILE}"
     df >> "${LOG_FILE}"
 
-    
+
     choice=""
     while :; do
         SWAP_SPLASH
@@ -624,7 +624,7 @@ EOF
                 break
                 ;;
 
-                
+
             2)
                 echo "Japanese layout selected." >> "${LOG_FILE}"
                 if sudo cp -f "${ASSETS_DIR}/kernel/vmlinux_jpn" "${STORAGE_DIR}/__system/p2lboot/vmlinux" >> "${LOG_FILE}" 2>&1 \
@@ -661,9 +661,9 @@ EOF
 EXTRAS_SPLASH() {
 clear
     cat << "EOF"
-                                     _____     _                 
-                                    |  ___|   | |                
-                                    | |____  _| |_ _ __ __ _ ___ 
+                                     _____     _
+                                    |  ___|   | |
+                                    | |____  _| |_ _ __ __ _ ___
                                     |  __\ \/ / __| '__/ _` / __|
                                     | |___>  <| |_| | | (_| \__ \
                                     \____/_/\_\\__|_|  \__,_|___/
