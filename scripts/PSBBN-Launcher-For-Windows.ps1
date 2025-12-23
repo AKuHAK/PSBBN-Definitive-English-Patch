@@ -167,7 +167,7 @@ function main {
       `&`& git checkout $gitBranch `
       `&`& git pull --ff-only `
     `) `
-    `|`| git clone -b $gitBranch https://github.com/AKuHAK/PSBBN-Definitive-English-Patch.git
+    `|`| git clone -b $gitBranch https://github.com/AKuHAK/PSBBN-Definitive-English-Patch.git -b desr
 
   if (-Not ($isWslInstalled)) {
     Write-Host "------- Linux magic finishes ---------`n"
@@ -479,7 +479,7 @@ Before you continue, you can fill this folder with your games and other media:
     - put music in /music (.mp3, .m4a, .flac, or .ogg files)
 
 You can refer to the PSBBN Readme to know more.
-https://github.com/CosmicScale/PSBBN-Definitive-English-Patch
+https://github.com/AKuHAK/PSBBN-Definitive-English-Patch
 " -ForegroundColor Yellow
 
   # store the selected path to re-use next time the script is ran

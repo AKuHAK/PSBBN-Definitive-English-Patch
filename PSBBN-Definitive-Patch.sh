@@ -76,7 +76,7 @@ copy_log() {
 git_update() {
     # Check if the current directory is a Git repository
     if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        error_msg "This script cannot continue due to an unsupported installation." "The PSBBN Definitive Patch is a rolling release." "To ensure you are always running the latest version, follow the installation instructions here:" "https://github.com/CosmicScale/PSBBN-Definitive-English-Patch?tab=readme-ov-file#user-guide"
+        error_msg "This script cannot continue due to an unsupported installation." "The PSBBN Definitive Patch is a rolling release." "To ensure you are always running the latest version, follow the installation instructions here:" "https://github.com/AKuHAK/PSBBN-Definitive-English-Patch?tab=readme-ov-file#user-guide"
     else
         # Fetch updates from the remote
         git fetch >> "${LOG_FILE}" 2>&1
@@ -102,7 +102,7 @@ git_update() {
 
                 # Pull the latest changes
                 if ! git pull --ff-only >> "${LOG_FILE}" 2>&1; then
-                    error_msg "Update failed. Delete the PSBBN-Definitive-English-Patch directory and run the command:" "git clone https://github.com/CosmicScale/PSBBN-Definitive-English-Patch.git" "Then try running the script again."
+                    error_msg "Update failed. Delete the PSBBN-Definitive-English-Patch directory and run the command:" "git clone https://github.com/AKuHAK/PSBBN-Definitive-English-Patch.git -b desr" "Then try running the script again."
                 fi
                 echo
                 echo "[✓] The repository has been successfully updated." | tee -a "${LOG_FILE}"
@@ -122,11 +122,7 @@ check_required_files() {
     local required_files=(
         "${SCRIPTS_DIR}/Setup.sh"
         "${SCRIPTS_DIR}/PSBBN-Installer.sh"
-        "${SCRIPTS_DIR}/HOSDMenu-Installer.sh"
-        "${SCRIPTS_DIR}/Game-Installer.sh"
         "${SCRIPTS_DIR}/Extras.sh"
-        "${SCRIPTS_DIR}/Game-Installer.sh"
-        "${SCRIPTS_DIR}/Media-Installer.sh"
         "${HELPER_DIR}/art_downloader.py"
         "${HELPER_DIR}/binmerge.py"
         "${HELPER_DIR}/icon_sys_to_txt.py"

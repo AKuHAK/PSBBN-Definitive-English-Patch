@@ -653,16 +653,8 @@ PSBBN_PATCH="${ASSETS_DIR}/${LATEST_FILE}"
 if [ "$MODE" = "install" ]; then
     echo | tee -a "${LOG_FILE}"
     INSTALL_SPLASH
-    # echo -n "Initialising the drive..." | tee -a "${LOG_FILE}"
-
-    # {
-    #     sudo wipefs -a ${DEVICE} &&
-    #     sudo dd if=/dev/zero of="${DEVICE}" bs=1M count=100 status=progress &&
-    #     sudo dd if=/dev/zero of="${DEVICE}" bs=1M seek=$(( $(sudo blockdev --getsz "${DEVICE}") / 2048 - 100 )) count=100 status=progress
-    # } >> "${LOG_FILE}" 2>&1 || error_msg "Failed to Initialising drive"
 
     COMMANDS="device ${DEVICE}\n"
-    # COMMANDS+="initialize yes\n"
     COMMANDS+="mkpart __linux.1 512M EXT2\n"
     COMMANDS+="mkpart __linux.2 128M EXT2SWAP\n"
     COMMANDS+="mkpart __linux.4 512M EXT2\n"
