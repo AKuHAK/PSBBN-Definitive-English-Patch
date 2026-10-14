@@ -232,6 +232,10 @@ UZEMLIBRETROPS2|Uzebox (Uzem)|EMU|EMU_UZEM|retroarch.com|uzem_libretro_ps2.elf
 VAPORSPECLIBRETROPS2|VaporSpec|EMU|EMU_VAPORSPE|retroarch.com|vaporspec_libretro_ps2.elf
 WASM4LIBRETROPS2|WebAssembly (WASM-4)|EMU|EMU_WASM4|retroarch.com|wasm4_libretro_ps2.elf
 X1LIBRETROPS2|X Millennium / X1|EMU|EMU_X1|retroarch.com|x1_libretro_ps2.elf
+AMIARCADIALIBRETROPS2|AmiArcadia|EMU|EMU_AMIARCAD|buildbot.libretro.com|amiarcadia_libretro_ps2.elf
+GEARLYNXLIBRETROPS2|Gearlynx (Atari Lynx)|EMU|EMU_GEARLYNX|buildbot.libretro.com|gearlynx_libretro_ps2.elf
+PD777LIBRETROPS2|PD777|EMU|EMU_PD777|buildbot.libretro.com|pd777_libretro_ps2.elf
+TIALIBRETROPS2|Tia (Atari 2600)|EMU|EMU_TAI|buildbot.libretro.com|tia_libretro_ps2.elf
 TYRIAN|Tyrian|GME|GME_TYRIAN|Andres ruiz|TYRIAN.elf
 TEAPOT|Teapot|DEM|DEM_TEAPOT|github.com/ps2dev|teapot.elf
 SPACE|Space Invaders|GME|GME_SPACEINV|Makeshift Development|space.elf
@@ -457,6 +461,7 @@ SDCD|Open PS2 Loader (SD Card Debugger)|APP|APP_OPL|ps2homebrew.github.io|sdcd_v
 SDCARDDEBUGGER|Open PS2 Loader (SD Card Debugger)|APP|APP_OPL|ps2homebrew.github.io|sdcard_debugger_v0.3.elf
 OPTICRAFTPS2|OptiCraft|GME|GME_OPTICRAF|OptiJogos|OptiCraft-ps2.elf
 OPTICRAFT06PS2|OptiCraft|GME|GME_OPTICRAF|OptiJogos|OptiCraft 0.6 PS2 V1.2.elf
+OPTICRAFT|OptiCraft|GME|GME_OPTICRAF|OptiJogos|OptiCraft.elf
 SC2MAKER|SoulCalibur2 Conquest Card Maker|APP|APP_SC2MAKER|israpps.github.io|sc2maker_pkd.elf
 PVZPS2|Plants vs. Zombies|GME|GME_PVZPS2|github.com/OptiJuegos|pvz_ps2.elf
 NETCHEAT|NetCheat|APP|APP_NETCHEAT|github.com/Dnawrkshp|NetCheat.elf
@@ -582,3 +587,8 @@ MELONDS|MelonDS|EMU|EMU_MELONDS|github.com/DanielSant0s|melonDS.elf
 LUNA|LUNA|APP|APP_LUNA|github.com/dnunezx|luna.elf
 RIPPS2|RIP PS2|APP|APP_RIPPS2|github.com/akilluminati47|RIPPS2.elf
 OPLRA|Open PS2 Loader (RetroAchievements)|APP|APP_OPLRA|github.com/hacan359|OPNPS2LD.ELF
+2004SP|2004sp - RS2 PS2 PORT|GME|GME_2004SP|github.com/johnson-cooper|2004sp.ELF
+POUPS2|Pou PS2|GME|GME_POUPS2|elmasas|pou_ps2.elf
+SD2CLOUD|SD2Cloud|APP|APP_SD2CLOUD|github.com/oMrRexD|SD2CLOUD.ELF
+SD2CLOUDIGR|SD2Cloud|APP|APP_SD2CLOUD|github.com/oMrRexD|SD2CLOUD-IGR.ELF 
+SD2CLOUDDEBUG|SD2Cloud|APP|APP_SD2CLOUD|github.com/oMrRexD|SD2CLOUD-DEBUG.ELF
