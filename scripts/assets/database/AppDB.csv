@@ -417,7 +417,7 @@ PS2BOR|PS2Bor|EMU|EMU_PS2BOR|Nicolas "Pixel" Noble |PS2Bor v0.1b.elf
 FORTUNAFMCBLAUNCHER|Fortuna FMCB Launcher|SYS|SYS_FUNTUNA|VTSTech|Fortuna FMCB Launcher v0.2.elf
 DVDELFDUMPER|DVD ELF Dumper|DST|DST_DVDELFDU||DVD ELF Dumper.elf
 DAEDALUSNEWTOOLCHAIN|DaedalusX64|EMU|EMU_DAEDALUS|github.com/belek666|Daedalus-newtoolchain.elf
-DAEDALUS|DaedalusX64|EMU|EMU_DAEDALUS|github.com/belek666|Daedalus.elf
+DAEDALUS|DaedalusX64|EMU|EMU_DAEDALUS|github.com/eclipsebladestudioficial|Daedalus.elf
 YETI3DPS2FIXED1|Yeti3D|GME|GME_YETI3D||YETI3D PS2 fixed1.elf
 YETI3DPS2|Yeti3D|GME|GME_YETI3D||YETI3D PS2.elf
 XRICK|Xrick|GME|GME_XRICK|BigOrno|xrick v021212.elf
