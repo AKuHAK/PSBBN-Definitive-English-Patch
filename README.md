@@ -732,7 +732,7 @@ For the best experience, a PS2 Fat model (SCPH-30000 to SCPH-55000 series) is re
 - [PSBBN](#psbbn) does not support third-party HDD adapters[*](#known-issues). Third-party adapters are only supported for [HOSDMenu-only installation](#install-hosdmenu-only).
 - [PSBBN](#psbbn) and [HOSDMenu](#hosdmenu) are both compatible with PS2 Slim SCPH-700xx models using an IDE Resurrector (or equivalent hardware mod), and early PS2 models (SCPH-10000 to SCPH-18000 series) with an official external HDD enclosure. [Additional setup is required for both configurations](#early-scph-1000018000-and-slim-scph-700xx-consoles).
 
-The **PSBBN Definitive Project** requires an x86-64 or ARM64 PC for installation. Connect the HDD or SSD to the PC via SATA or a USB adapter.
+The **PSBBN Definitive Project** requires an x86-64 or ARM64 PC for installation. Apple silicon Macs are also supported. Connect the HDD or SSD to the computer via SATA or a USB adapter.
 
 ## Installing on Linux
 64-bit Debian-based distributions using `apt`, Arch-based distributions using `pacman`, Fedora-based[*](#troubleshooting) distributions using `dnf`, and Gentoo-based distributions using `emerge` are supported. Nix-based systems are also supported via flakes. Recommended distributions are Linux Mint, Debian, and for Raspberry Pi, Raspberry Pi OS.
@@ -748,12 +748,29 @@ Clone the repository:
 ```
 git clone https://github.com/CosmicScale/PSBBN-Definitive-Project.git
 ```
-
 You can then change to the `PSBBN-Definitive-Project` directory and run `PSBBN-Definitive-Patch.sh`:
 ```
 cd PSBBN-Definitive-Project
 ./PSBBN-Definitive-Patch.sh
 ```
+## Installing on macOS
+Install [Homebrew](https://brew.sh) if it is not already installed. If `brew` asks for the Xcode Command Line Tools, install them and run `brew` again.
+
+**The PSBBN Definitive Project is a rolling release. To get automatic updates and the latest bug fixes, you must install the scripts using `git clone`.**
+
+Clone the repository:
+```
+git clone https://github.com/CosmicScale/PSBBN-Definitive-Project.git
+```
+You can then change to the `PSBBN-Definitive-Project` directory and run `PSBBN-Definitive-Patch.sh`:
+```
+cd PSBBN-Definitive-Project
+./PSBBN-Definitive-Patch.sh
+```
+**NOTE:**  
+- When installing [PSBBN and HOSDMenu](#install-psbbn-and-hosdmenu) or [HOSDMenu only](#install-hosdmenu-only), a warning window will appear with the message: “The disk you attached was not readable by this computer.” Click **Ignore** to dismiss the warning.
+- Always exit the **[PSBBN Definitive Project Main Menu](main-menu)** by pressing `q`. Before you unplug the drive, eject it from Finder.
+
 ## Installing on Windows
 The recommended way to install the **PSBBN Definitive Project** on Windows is by using the **PSBBN Launcher for Windows**. The **PSBBN Launcher for Windows** is compatible with Windows 10 and 11 Home editions; other editions may not be compatible. For a trouble-free experience, make sure Windows is fully up to date.
 
@@ -1250,9 +1267,13 @@ wsl --unregister PSBBN
 3. Ensure you have an active internet connection. If you are using a VPN, try disabling it
 4. Run the `PSBBN-Launcher-For-Windows.ps1` script again
 
-**If you are using [Linux](#installing-on-linux) and experience issues:**
+**If you are using [macOS](#installing-on-macos) and the script exits before the menu:**
+`/bin/bash` on macOS is too old for this script. Install Homebrew bash with `brew install bash` and run `./PSBBN-Definitive-Patch.sh` again. If a partition write fails, confirm `e2fsprogs` and `mtools` are installed and that the administrator prompt was approved. If this does not resolve the issue, continue with the steps below.
+
+**If you are using [Linux](#installing-on-linux) or [macOS](#installing-on-macos) and experience issues:**
 1. Delete the `PSBBN-Definitive-Project` folder
-2. Re-Clone the repository with the following command:
+2. Restart your computer
+3. Re-Clone the repository with the following command:
 ```
 git clone https://github.com/CosmicScale/PSBBN-Definitive-Project.git
 ```
@@ -1328,7 +1349,7 @@ If PS2 games do not appear in the games list in [NHDDL](#nhddl) or [OPL](#open-p
 - APA partitions must not be created beyond the space reserved for APA during installation. Doing so will overwrite data on the exFAT partition.
 - Instances in feega where some Japanese text couldn't be translated due to it being hard-coded in an encrypted file. Atok software has not been translated. 
 
-## Reporting issues
+## Reporting Issues
 If you have tried the relevant steps above and the problem persists, check for an existing issue or open a new one [here](https://github.com/CosmicScale/PSBBN-Definitive-Project/issues).  
 Please include all relevant log files:
 - `setup.log`

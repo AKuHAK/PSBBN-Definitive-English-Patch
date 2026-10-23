@@ -732,7 +732,7 @@ Para a melhor experiência, recomenda-se um modelo PS2 Fat (séries SCPH-30000 a
 - O [PSBBN](#psbbn) não suporta adaptadores de HDD de terceiros[*](#problemas-conhecidos). Adaptadores de terceiros são suportados apenas para a [instalação do HOSDMenu](#instalar-apenas-o-hosdmenu).
 - O [PSBBN](#psbbn) e o [HOSDMenu](#hosdmenu) são compatíveis com os modelos PS2 Slim SCPH-700xx usando um IDE Resurrector (ou mod de hardware equivalente), e com os primeiros modelos de PS2 (séries SCPH-10000 a SCPH-18000) com um case de HDD externo oficial. [Uma configuração adicional é necessária para ambas as configurações](#consoles-antigos-scph-1000018000-e-slim-scph-700xx).
 
-O **PSBBN Definitive Project** requer um PC x86-64 ou ARM64 para instalação. Conecte o HDD ou SSD ao PC via cabo SATA ou por meio de um adaptador USB.
+O **PSBBN Definitive Project** requer um PC x86-64 ou ARM64 para instalação. Macs com Apple Silicon também são compatíveis. Conecte o HDD ou SSD ao computador via cabo SATA ou por meio de um adaptador USB.
 
 ## Instalando no Linux
 Distribuições de 64 bits baseadas em Debian usando `apt`, distribuições baseadas em Arch usando `pacman` e distribuições baseadas em Fedora[*](#solução-de-problemas) usando `dnf` são suportadas. Sistemas baseados em Nix também são suportados via flakes. As distribuições recomendadas são Linux Mint, Debian e, para Raspberry Pi, o Raspberry Pi OS.
@@ -748,12 +748,29 @@ Clone o repositório:
 ```
 git clone https://github.com/CosmicScale/PSBBN-Definitive-Project.git
 ```
-
 Em seguida, acesse o diretório `PSBBN-Definitive-Project` e execute o script `PSBBN-Definitive-Patch.sh`:
 ```
 cd PSBBN-Definitive-Project
 ./PSBBN-Definitive-Patch.sh
 ```
+## Instalando no macOS
+Instale o [Homebrew](https://brew.sh) se ele ainda não estiver instalado. Se o `brew` pedir as Xcode Command Line Tools, instale-as e execute o `brew` de novo.
+
+**O PSBBN Definitive Project é um lançamento contínuo (rolling release). Para receber atualizações automáticas e as últimas correções de bugs, você deve instalar os scripts usando `git clone`.**
+
+Clone o repositório:
+```
+git clone https://github.com/CosmicScale/PSBBN-Definitive-Project.git
+```
+Em seguida, acesse o diretório `PSBBN-Definitive-Project` e execute o script `PSBBN-Definitive-Patch.sh`:
+```
+cd PSBBN-Definitive-Project
+./PSBBN-Definitive-Patch.sh
+```
+OBSERVAÇÃO:
+- Ao instalar [PSBBN e HOSDMenu](#instalar-psbbn-e-hosdmenu) ou [apenas o HOSDMenu](#instalar-apenas-o-hosdmenu), uma janela de aviso será exibida com a mensagem: “O disco conectado não pôde ser lido por este computador.” Clique em Ignorar para fechar o aviso.
+- Sempre saia do Menu Principal do PSBBN Definitive Project pressionando q. Antes de desconectar a unidade, ejete-a pelo Finder.
+
 ## Instalando no Windows
 A maneira recomendada de instalar o **PSBBN Definitive Project** no Windows é usando o **PSBBN Launcher for Windows**. O **PSBBN Launcher for Windows** é compatível com as edições Home do Windows 10 e 11; outras edições podem não ser compatíveis. Para uma experiência sem problemas, certifique-se de que o Windows esteja totalmente atualizado.
 
@@ -1250,9 +1267,13 @@ wsl --unregister PSBBN
 3. Certifique-se de ter uma conexão de internet ativa. Se estiver usando uma VPN, tente desativá-la.
 4. Execute o script `PSBBN-Launcher-For-Windows.ps1` novamente.
 
-**Se você estiver usando o [Linux](#instalando-no-linux) e encontrar problemas:**
+**Se você estiver usando o [macOS](#instalando-no-macos) e o script encerrar antes do menu:**
+O `/bin/bash` do macOS é antigo demais para este script. Instale o bash do Homebrew com `brew install bash` e execute `./PSBBN-Definitive-Patch.sh` de novo. Se a gravação de uma partição falhar, confirme que `e2fsprogs` e `mtools` estão instalados e que o pedido de administrador foi aceito. Se isso não resolver o problema, prossiga com as etapas abaixo.
+
+**Se você estiver usando [Linux](#instalando-no-linux) ou [macOS](#instalando-no-macos) e encontrar problemas:**
 1. Exclua a pasta `PSBBN-Definitive-Project`.
-2. Clone novamente o repositório executando o seguinte comando:
+2. Reinicie o computador.
+3. Clone novamente o repositório executando o seguinte comando:
 ```
 git clone https://github.com/CosmicScale/PSBBN-Definitive-Project.git
 ```
