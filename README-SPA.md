@@ -1244,6 +1244,7 @@ Los modelos **SCPH-10000 a SCPH-18000** con una carcasa de disco duro externa of
 - Raspberry Pi OS
 - Windows 10 Home Edition
 - Windows 11 Home Edition
+- macOS 27
 
 ## Problemas al Ejecutar el Script
 

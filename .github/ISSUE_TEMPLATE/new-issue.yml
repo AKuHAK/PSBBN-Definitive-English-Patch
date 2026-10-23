@@ -20,6 +20,7 @@ body:
         - Raspberry Pi OS
         - Windows 10 Home Edition
         - Windows 11 Home Edition
+        - macOS 27
 
         ## Problems Running the Script
 
@@ -43,9 +44,13 @@ body:
         3. Ensure you have an active internet connection. If you are using a VPN, try disabling it
         4. Run the `PSBBN-Launcher-For-Windows.ps1` script again
 
-        **If you are using Linux and experience issues:**
+        **If you are using macOS and the script exits before the menu:**
+        `/bin/bash` on macOS is too old for this script. Install Homebrew bash with `brew install bash` and run `./PSBBN-Definitive-Patch.sh` again. If a partition write fails, confirm `e2fsprogs` and `mtools` are installed and that the administrator prompt was approved. If this does not resolve the issue, continue with the steps below.
+
+        **If you are using Linux or macOS and experience issues:**
         1. Delete the `PSBBN-Definitive-Project` folder
-        2. Re-Clone the repository with the following command:
+        2. Restart your computer
+        3. Re-Clone the repository with the following command:
         ```
         git clone https://github.com/CosmicScale/PSBBN-Definitive-Project.git
         ```

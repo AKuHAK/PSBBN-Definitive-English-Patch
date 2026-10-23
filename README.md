@@ -1244,6 +1244,7 @@ You must also download the [External HDD Drivers](https://israpps.github.io/Free
 - Raspberry Pi OS
 - Windows 10 Home Edition
 - Windows 11 Home Edition
+- macOS 27
 
 ## Problems Running the Script
 

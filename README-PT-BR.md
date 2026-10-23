@@ -1244,6 +1244,7 @@ Os modelos **SCPH-10000 a SCPH-18000** que possuem o case oficial de HDD externo
 - Raspberry Pi OS
 - Windows 10 Home Edition
 - Windows 11 Home Edition
+- macOS 27
 
 ## Problemas ao Executar o Script
 
