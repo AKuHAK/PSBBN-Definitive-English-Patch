@@ -633,7 +633,7 @@ psbbn_gnu_sed() {
 # download into it, and the front door deletes the changelog in its lang
 # folder once it has been shown. The overlay is in TMPDIR, which macOS
 # empties on restart.
-_psbbn_user_dirs=(games media icons logs scripts/assets)
+_psbbn_user_dirs=(games media icons logs scripts/assets rpm pfsshell external_tools)
 
 # Game-Installer and Media-Installer keep the games and media folders the
 # user chose in these files.
@@ -713,11 +713,13 @@ build_overlay() {
     fi
     (
         cd "$repo" || exit 1
-        find . -print0
+        find . \( -name .git -o -name pfsshell -o -name external_tools -o -name venv \) -prune -o -print0
     ) | while IFS= read -r -d '' rel; do
         case "$rel" in
             ./.git|./.git/*) continue ;;
             ./scripts/venv|./scripts/venv/*) continue ;;
+            ./pfsshell|./pfsshell/*) continue ;;
+            ./external_tools|./external_tools/*) continue ;;
         esac
         name=${rel#./}
         for dir in "${_psbbn_user_dirs[@]}"; do
@@ -726,10 +728,11 @@ build_overlay() {
         if [[ -d "$repo/$rel" && ! -L "$repo/$rel" ]]; then
             mkdir -p "$dest/$rel"
         elif [[ -e "$repo/$rel" || -L "$repo/$rel" ]]; then
-            [[ -e "$dest/$rel" ]] && continue
-            dir=$(dirname "$dest/$rel")
-            mkdir -p "$dir"
-            ln -s "$repo/$rel" "$dest/$rel"
+            target="$dest/$rel"
+            [[ -e "$target" || -L "$target" ]] && continue
+            dir="${target%/*}"
+            [[ -d "$dir" ]] || mkdir -p "$dir"
+            ln -s "$repo/$rel" "$target"
         fi
     done
     [[ -e "$dest/.git" ]] || ln -s "$repo/.git" "$dest/.git"
