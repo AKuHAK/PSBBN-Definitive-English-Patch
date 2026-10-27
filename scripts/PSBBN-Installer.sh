@@ -322,7 +322,9 @@ error_msg() {
     echo "${UI_TEXT[ERROR_TROUBLE]}"
     echo "${UI_TEXT[TROUBLE_URL]}"
     echo
-    read -n 1 -s -r -p "${UI_TEXT[MENU_RETURN]}" </dev/tty
+    if [[ -z "${PSBBN_NONINTERACTIVE:-}" ]]; then
+        read -n 1 -s -r -p "${UI_TEXT[MENU_RETURN]}" </dev/tty
+    fi
     echo
     exit 1
 }
@@ -701,14 +703,43 @@ SSHEOF
         sudo bash -c "echo 'bn:${bn_hash}:19000:0:99999:7:::' >> '${target_root}/etc/shadow'"
     fi
 
-    # Ensure user bn exists in /etc/passwd
-    if [[ -f "${target_root}/etc/passwd" ]]; then
-        if ! grep -q "^bn:" "${target_root}/etc/passwd"; then
-            sudo bash -c "echo 'bn:x:500:500:PS2 User:/net/home/bn:/bin/bash' >> '${target_root}/etc/passwd'"
+    # Unpack extra RPMs (sudo, strace, gdb, Eterm, etc.)
+    for rpm in "${TOOLKIT_PATH}"/rpm/*.RPM "${TOOLKIT_PATH}"/rpm/*.rpm; do
+        if [[ -f "$rpm" ]]; then
+            sudo bsdtar -xf "$rpm" -C "${target_root}/" 2>> "${LOG_FILE}"
+            echo "Unpacked RPM: $(basename "$rpm")" >> "${LOG_FILE}"
         fi
-    fi
+    done
+    sudo chmod 4755 "${target_root}/usr/bin/sudo" 2>/dev/null || true
 
-    echo "[✓] SSH and SFTP server configured for user 'bn' and 'root' (password: bn)" >> "${LOG_FILE}"
+    # Configure /etc/sudoers for passwordless sudo
+    sudo mkdir -p "${target_root}/etc"
+    sudo bash -c "cat > '${target_root}/etc/sudoers'" <<'SUDOEOF'
+root ALL=(ALL) ALL
+bn ALL=(ALL) NOPASSWD: ALL
+SUDOEOF
+    sudo chmod 440 "${target_root}/etc/sudoers" 2>/dev/null || true
+
+    # Set network hostname to ps2 and configure DHCP hostname in ifcfg-eth0
+    sudo mkdir -p "${target_root}/etc/sysconfig/network-scripts"
+    sudo bash -c "cat > '${target_root}/etc/sysconfig/network'" <<'NETEOF'
+HOSTNAME=ps2
+NETWORKING=yes
+FORWARD_IPV4=false
+NETEOF
+
+    sudo bash -c "cat > '${target_root}/etc/sysconfig/network-scripts/ifcfg-eth0'" <<'ETH0EOF'
+DEVICE=eth0
+ONBOOT=yes
+BOOTPROTO=dhcp
+DHCP_HOSTNAME=ps2
+ETH0EOF
+
+    sudo bash -c "cat > '${target_root}/etc/hosts'" <<'HOSTSEOF'
+127.0.0.1   localhost ps2 ps2.lan ps2.local
+HOSTSEOF
+
+    echo "[✓] SSH, SFTP, and sudo configured for user 'bn' and 'root' (hostname: ps2, password: bn)" >> "${LOG_FILE}"
 }
 
 BOOTSTRAP() {
@@ -931,7 +962,11 @@ trap exit_script EXIT
 if [ "$MODE" = "install" ]; then
     INSTALL_SPLASH
     # Choose the PS2 storage device
-    if [[ -n "$serialnumber" ]]; then
+    if [[ -n "${PSBBN_DEVICE:-}" ]]; then
+        DEVICE="$PSBBN_DEVICE"
+        drive_model=$(lsblk -ndo MODEL,SIZE,SERIAL "$DEVICE" 2>/dev/null | xargs || true)
+        [[ -z "$drive_model" ]] && drive_model="$DEVICE"
+    elif [[ -n "$serialnumber" ]]; then
         DEVICE=$(lsblk -p -o NAME,SERIAL | awk -v sn="$serialnumber" '$2 == sn {print $1; exit}')
         drive_model=$(lsblk -ndo VENDOR,MODEL,SIZE,SERIAL "$DEVICE" | xargs)
     fi
@@ -975,29 +1010,33 @@ if [ "$MODE" = "install" ]; then
         echo "Selected drive: $drive_model" >> "${LOG_FILE}"
         echo "${UI_TEXT[CONFIRM_DRIVE_1]} $drive_model"
 
-        while true; do
-            echo
-            echo "${UI_TEXT[CONFIRM_DRIVE_2]}"
-            echo
-            read -rp "${UI_TEXT[CONFIRM_DRIVE_3]} (yes/no): " CONFIRM
+        if [[ -n "${PSBBN_NONINTERACTIVE:-}" ]]; then
+            CONFIRM="yes"
+        else
+            while true; do
+                echo
+                echo "${UI_TEXT[CONFIRM_DRIVE_2]}"
+                echo
+                read -rp "${UI_TEXT[CONFIRM_DRIVE_3]} (yes/no): " CONFIRM
 
-            case "$CONFIRM" in
-                yes)
-                    # Valid confirmation → break out of loop and continue
-                    break
-                    ;;
-                no)
-                    echo
-                    read -n 1 -s -r -p "${UI_TEXT[MENU_RETURN]}" </dev/tty
-                    echo
-                    exit 1
-                    ;;
-                *)
-                    echo
-                    echo "${UI_TEXT[CONFIRM]} (yes/no)"
-                    ;;
-            esac
-        done
+                case "$CONFIRM" in
+                    yes)
+                        # Valid confirmation → break out of loop and continue
+                        break
+                        ;;
+                    no)
+                        echo
+                        read -n 1 -s -r -p "${UI_TEXT[MENU_RETURN]}" </dev/tty
+                        echo
+                        exit 1
+                        ;;
+                    *)
+                        echo
+                        echo "${UI_TEXT[CONFIRM]} (yes/no)"
+                        ;;
+                esac
+            done
+        fi
     fi
 
     case "$LANG_FILE" in
@@ -1265,7 +1304,9 @@ if [ "$PSBBN_UPDATE" != "no" ] || [ "$MODE" != "update" ]; then
     echo "=============================================================================================================="
     echo
     center_text "${UI_TEXT[CONTINUE]}"
-    read -n 1 -s -r -p "$text" </dev/tty
+    if [[ -z "${PSBBN_NONINTERACTIVE:-}" ]]; then
+        read -n 1 -s -r -p "$text" </dev/tty
+    fi
     echo
 fi
 
@@ -1293,7 +1334,7 @@ if [ "$MODE" = "install" ]; then
     COMMANDS+="mkpart __linux.6 128M EXT2\n"
     COMMANDS+="mkpart __linux.7 256M EXT2\n"
     COMMANDS+="mkpart __linux.9 2048M EXT2\n"
-    COMMANDS+="mkpart __contents 2048M PFS\n"
+    COMMANDS+="mkpart __contents 3072M PFS\n"
     COMMANDS+="exit"
 
     PFS_COMMANDS
@@ -1891,5 +1932,7 @@ else
     text="${UI_TEXT[MENU_RETURN]}"
 fi
 
-read -n 1 -s -r -p "$text" </dev/tty
+if [[ -z "${PSBBN_NONINTERACTIVE:-}" ]]; then
+    read -n 1 -s -r -p "$text" </dev/tty
+fi
 echo

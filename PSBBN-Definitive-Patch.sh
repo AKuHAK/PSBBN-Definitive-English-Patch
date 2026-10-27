@@ -33,7 +33,7 @@ if [[ "$(uname -s)" == Darwin && -z "${PSBBN_DARWIN_ENTERED:-}" ]]; then
     exec "$(cd "$(dirname "$0")" && pwd)/scripts/platform/darwin/enter.sh" "$@"
 fi
 
-[[ -t 0 && -t 1 ]] || exit 1
+[[ -t 0 && -t 1 ]] || [[ -n "${PSBBN_NONINTERACTIVE:-}" ]] || exit 1
 
 echo -e "\e[8;45;110t"
 term_width=110
@@ -356,7 +356,9 @@ error_msg() {
   echo "${UI_TEXT[ERROR_TROUBLE]}"
   echo "${UI_TEXT[TROUBLE_URL]}"
   echo
-  read -n 1 -s -r -p "${UI_TEXT[EXIT_KEY]}" </dev/tty
+  if [[ -z "${PSBBN_NONINTERACTIVE:-}" ]]; then
+    read -n 1 -s -r -p "${UI_TEXT[EXIT_KEY]}" </dev/tty
+  fi
   echo
   exit 1
 }
@@ -998,8 +1000,15 @@ if [ -f "${ASSETS_DIR}/lang/changelog_main_$LANG_FILE.txt" ]; then
     echo "=============================================================================================================="
     echo
     center_text "${UI_TEXT[CONTINUE]}"
-    read -n 1 -s -r -p "$text" </dev/tty
+    if [[ -z "${PSBBN_NONINTERACTIVE:-}" ]]; then
+        read -n 1 -s -r -p "$text" </dev/tty
+    fi
     rm "${ASSETS_DIR}/lang/changelog_main_$LANG_FILE.txt"
+fi
+
+if [[ -n "${PSBBN_NONINTERACTIVE:-}" ]]; then
+    option_one
+    exit 0
 fi
 
 clear
