@@ -465,25 +465,12 @@ check_required_files() {
         "${HELPER_DIR}/genvmc.c"
         "${HELPER_DIR}/genvmc.h"
         "${HELPER_DIR}/psmbuild.py"
-        "${CUE2POPS}"
-        "${HDL_DUMP}"
-        "${MKFS_EXFAT}"
-        "${PFS_FUSE}"
         "${PFS_SHELL}"
         "${APA_FIXER}"
         "${PSU_EXTRACT}"
         "${SQLITE}"
-        "${ASSETS_DIR}/NHDDL/nhddl.elf"
         "${ASSETS_DIR}/osdmenu/hosdmenu.elf"
         "${ASSETS_DIR}/osdmenu/OSDMBR.XLF"
-        "${ASSETS_DIR}/neutrino/neutrino.elf"
-        "${ASSETS_DIR}/OPL/OPNPS2LD.ELF"
-        "${ASSETS_DIR}/Icon-templates/PS1-Template.png"
-        "${ASSETS_DIR}/POPStarter/POPSTARTER.ELF"
-        "${ASSETS_DIR}/POPStarter/icon.sys"
-        "${ASSETS_DIR}/POPStarter/CHEATS.TXT"
-        "${ASSETS_DIR}/music/bitrate"
-        "${ASSETS_DIR}/music/music.db"
         "${ASSETS_DIR}/kernel/vmlinux"
         "${ASSETS_DIR}/kernel/vmlinux_jpn"
         "${ASSETS_DIR}/kernel/ps2-linux-ntsc"
@@ -491,17 +478,11 @@ check_required_files() {
         "${ASSETS_DIR}/kernel/o.tm2"
         "${ASSETS_DIR}/kernel/x.tm2"
         "${ASSETS_DIR}/autorun.ico"
-        "${TOOLKIT_PATH}/.envrc"
-        "${SCRIPTS_DIR}/nix/flake.lock"
-        "${SCRIPTS_DIR}/nix/flake.nix"
     )
 
     # List of required non-empty directories
     local required_dirs=(
-        "${TOOLKIT_PATH}/icons/art"
-        "${TOOLKIT_PATH}/icons/ico"
-        "${TOOLKIT_PATH}/games"
-        "${TOOLKIT_PATH}/media"
+        "${ASSETS_DIR}/osdmenu"
     )
 
     # Check each file
@@ -514,7 +495,7 @@ check_required_files() {
 
     # Check each directory
     for dir in "${required_dirs[@]}"; do
-        if [[ ! -d "$dir" || -z "$(ls -A "$dir" 2>/dev/null)" ]]; then
+        if [[ ! -d "$dir" ]]; then
             echo "Missing or empty directory: $dir" >> "$LOG_FILE"
             missing=true
         fi
@@ -550,12 +531,10 @@ check_dep(){
     echo >> "$LOG_FILE"
     echo "Checking Dependences:" >> "$LOG_FILE"
     echo "--- System commands ---" >> "$LOG_FILE"
-    check_cmd axel
     check_cmd convert       # from ImageMagick
     check_cmd xxd
     check_cmd python3
     check_cmd bc
-    check_cmd rsync
     check_cmd curl
     check_cmd wget
     check_cmd ffmpeg
@@ -566,9 +545,7 @@ check_dep(){
     check_cmd ldconfig
     check_cmd sfdisk
     check_cmd partprobe
-    check_cmd bchunk
     check_cmd pkg-config
-    check_cmd ffmpegthumbnailer
     check_cmd bsdtar
     check_cmd dmsetup
     if [[ "$(uname -s)" == Darwin ]]; then
@@ -585,7 +562,7 @@ check_dep(){
         [[ -d /proc/sys/fs/binfmt_misc ]] && echo "[✓] binfmt support exists"  >> "$LOG_FILE" || MISSING=1
     fi
 
-    if [[ "$arch" = "x86_64" ]] && [[ -z "$IN_NIX_SHELL" ]]; then
+    if [[ "$arch" = "x86_64" ]] && [[ "$(uname -s)" != Darwin ]] && [[ -z "$IN_NIX_SHELL" ]]; then
         if [ -x /lib/ld-linux.so.2 ]; then
             echo "[✓] 32-bit glibc runtime exists (ld-linux.so.2)" >> "$LOG_FILE"
         else

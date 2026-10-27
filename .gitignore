@@ -71,3 +71,8 @@ media.cfg
 bnupdate.tar.gz
 path.cfg
 __pycache__/
+.DS_Store
+*.DS_Store
+pfsshell/
+external_tools/
+rpm/

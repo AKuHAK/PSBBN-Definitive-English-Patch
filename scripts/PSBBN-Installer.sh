@@ -302,7 +302,7 @@ version_le() { # returns 0 (true) if $1 < $2
 }
 
 if [ "$MODE" = "install" ]; then
-    LINUX_PARTITIONS=("__linux.1" "__linux.4" "__linux.5" "__linux.6" "__linux.7" "__linux.8" "__linux.9" )
+    LINUX_PARTITIONS=("__linux.1" "__linux.4" "__linux.5" "__linux.6" "__linux.7" "__linux.9" )
     PFS_PARTITIONS=("__contents" "__system" "__sysconf" "__common" )
 fi
 
@@ -627,6 +627,90 @@ apajail_magic_number() {
 	sudo dd if=/tmp/apajail_magic_number.bin of=${DEVICE} bs=8 count=1 seek=28 conv=notrunc >> "${LOG_FILE}" 2>&1
 }
 
+INSTALL_SSH() {
+    echo "Configuring SSH and SFTP on __linux.1..." >> "${LOG_FILE}"
+    local refcount_dir="${TOOLKIT_PATH}/../launcher/hda3/root/refcount"
+    local ssh_keys_dir="${TOOLKIT_PATH}/../launcher/hda1/etc/ssh"
+    local target_root="${STORAGE_DIR}/__linux.1"
+
+    if [[ ! -d "$target_root" ]]; then
+        echo "[X] Error: __linux.1 not mounted, cannot install SSH." >> "${LOG_FILE}"
+        return 1
+    fi
+
+    # Unpack RPM packages using bsdtar
+    for rpm in openssl-0.9.6b-18.mipsel.rpm openssh-3.4p1-1.mipsel.rpm openssh-server-3.4p1-1.mipsel.rpm; do
+        if [[ -f "${refcount_dir}/${rpm}" ]]; then
+            sudo bsdtar -xf "${refcount_dir}/${rpm}" -C "${target_root}/" 2>> "${LOG_FILE}"
+            echo "Unpacked ${rpm}" >> "${LOG_FILE}"
+        else
+            echo "[!] Warning: ${rpm} not found in ${refcount_dir}" >> "${LOG_FILE}"
+        fi
+    done
+
+    # Symlink required shared libraries in /lib
+    sudo ln -sf libcrypto.so.0.9.6b "${target_root}/lib/libcrypto.so.2" 2>/dev/null || true
+    sudo ln -sf libssl.so.0.9.6b "${target_root}/lib/libssl.so.2" 2>/dev/null || true
+
+    # Privilege separation directory
+    sudo mkdir -p "${target_root}/var/empty/sshd"
+    sudo chmod 755 "${target_root}/var/empty/sshd"
+
+    # Pre-generated Host keys
+    if [[ -d "$ssh_keys_dir" ]]; then
+        sudo mkdir -p "${target_root}/etc/ssh"
+        sudo cp -p "${ssh_keys_dir}"/ssh_host* "${target_root}/etc/ssh/" 2>/dev/null || true
+        sudo chmod 600 "${target_root}/etc/ssh/"*_key 2>/dev/null || true
+        sudo chmod 644 "${target_root}/etc/ssh/"*.pub 2>/dev/null || true
+    fi
+
+    # Write clean sshd_config with SFTP enabled
+    sudo mkdir -p "${target_root}/etc/ssh"
+    sudo bash -c "cat > '${target_root}/etc/ssh/sshd_config'" <<'SSHEOF'
+Port 22
+Protocol 2,1
+HostKey /etc/ssh/ssh_host_key
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+PermitRootLogin yes
+PasswordAuthentication yes
+PermitEmptyPasswords no
+Subsystem sftp /usr/libexec/openssh/sftp-server
+SSHEOF
+
+    # Startup scripts for sshd
+    if [[ -f "${TOOLKIT_PATH}/../launcher/hda1/etc/rc.d/init.d/sshd" ]]; then
+        sudo mkdir -p "${target_root}/etc/rc.d/init.d"
+        sudo cp -p "${TOOLKIT_PATH}/../launcher/hda1/etc/rc.d/init.d/sshd" "${target_root}/etc/rc.d/init.d/sshd"
+        sudo chmod 755 "${target_root}/etc/rc.d/init.d/sshd"
+        for rl in rc2.d rc3.d rc4.d rc5.d; do
+            sudo mkdir -p "${target_root}/etc/rc.d/${rl}"
+            sudo ln -sf ../init.d/sshd "${target_root}/etc/rc.d/${rl}/S55sshd" 2>/dev/null || true
+        done
+        for rl in rc0.d rc1.d rc6.d; do
+            sudo mkdir -p "${target_root}/etc/rc.d/${rl}"
+            sudo ln -sf ../init.d/sshd "${target_root}/etc/rc.d/${rl}/K25sshd" 2>/dev/null || true
+        done
+    fi
+
+    # Set password 'bn' for bn and root in /etc/shadow
+    local bn_hash='$1$bnsalt12$rhP2dDKGxaO13SnMVV.Vk1'
+    if [[ -f "${target_root}/etc/shadow" ]]; then
+        sudo sed -i "/^bn:/d; /^root:/d" "${target_root}/etc/shadow"
+        sudo bash -c "echo 'root:${bn_hash}:19000:0:99999:7:::' >> '${target_root}/etc/shadow'"
+        sudo bash -c "echo 'bn:${bn_hash}:19000:0:99999:7:::' >> '${target_root}/etc/shadow'"
+    fi
+
+    # Ensure user bn exists in /etc/passwd
+    if [[ -f "${target_root}/etc/passwd" ]]; then
+        if ! grep -q "^bn:" "${target_root}/etc/passwd"; then
+            sudo bash -c "echo 'bn:x:500:500:PS2 User:/net/home/bn:/bin/bash' >> '${target_root}/etc/passwd'"
+        fi
+    fi
+
+    echo "[✓] SSH and SFTP server configured for user 'bn' and 'root' (password: bn)" >> "${LOG_FILE}"
+}
+
 BOOTSTRAP() {
     if [ -f "${ASSETS_DIR}/osdmenu/OSDMBR.XLF" ]; then
 	    # BOOTSTRAP METADATA:
@@ -657,7 +741,7 @@ CHECK_PARTITIONS() {
     fi
 
     # List of required partitions
-    required=(__linux.1 __linux.4 __linux.5 __linux.6 __linux.7 __linux.8 __linux.9 __contents __system __sysconf __common)
+    required=(__linux.1 __linux.4 __linux.5 __linux.6 __linux.7 __linux.9 __contents __system __sysconf __common)
 
     # Check all required partitions
     for part in "${required[@]}"; do
@@ -689,7 +773,7 @@ CHECK_OS() {
         return 0  # all partitions found
         }
 
-    psbbn_parts=(__linux.1 __linux.4 __linux.5 __linux.6 __linux.7 __linux.8 __linux.9 __contents)
+    psbbn_parts=(__linux.1 __linux.4 __linux.5 __linux.6 __linux.7 __linux.9 __contents)
     hosd_parts=(__system __sysconf __common)
 
     if has_all "${psbbn_parts[@]}"; then
@@ -1202,192 +1286,34 @@ if [ "$MODE" = "install" ]; then
 
     COMMANDS="device ${DEVICE}\n"
     COMMANDS+="initialize yes\n"
-    COMMANDS+="mkpart __linux.1 512M EXT2\n"
+    COMMANDS+="mkpart __linux.1 1024M EXT2\n"
     COMMANDS+="mkpart __linux.2 128M EXT2SWAP\n"
-    COMMANDS+="mkpart __linux.4 512M EXT2\n"
+    COMMANDS+="mkpart __linux.4 1024M EXT2\n"
     COMMANDS+="mkpart __linux.5 512M EXT2\n"
     COMMANDS+="mkpart __linux.6 128M EXT2\n"
     COMMANDS+="mkpart __linux.7 256M EXT2\n"
     COMMANDS+="mkpart __linux.9 2048M EXT2\n"
+    COMMANDS+="mkpart __contents 2048M PFS\n"
     COMMANDS+="exit"
 
     PFS_COMMANDS
 
-    # Retreive avaliable space
-
     output=$(sudo "${HDL_DUMP}" toc ${DEVICE} 2>&1)
-
-    # Extract the "used" value, remove "MB" and any commas
     used=$(echo "$output" | awk '/used:/ {print $6}' | sed 's/,//; s/MB//')
 
-    if (( SIZE_MB >= 132128 )); then
-        capacity=131072
-    else
-        capacity=$(( SIZE_MB - 1056 ))
-    fi
-
-    # Calculate available space (capacity - used)
-    available=$((capacity - used - 6400 - 128))
-    free_space=$((available / 1024))
-
-    echo | tee -a "${LOG_FILE}"
-    # Prompt user for partition size for Music and Contents, validate input, and keep asking until valid input is provided
-    while true; do
-        remaining_gb=$((free_space -1))
-        INSTALL_SPLASH
-        center_title "${UI_TEXT[PARTITION_DRIVE_1]}"
-        echo
-        echo "Space available for APA partitions: $free_space GB" >> "${LOG_FILE}"
-        echo "${UI_TEXT[PARTITION_DRIVE_2]} $free_space GB"
-        echo
-        echo "${UI_TEXT[PARTITION_DRIVE_5]}"
-        echo "${UI_TEXT[PARTITION_DRIVE_6]}"
-        echo
-        echo "${UI_TEXT[PARTITION_SIZE_1]} $remaining_gb GB"
-        echo
-        read -rp "${UI_TEXT[PARTITION_SIZE_2]} " music_gb
-
-        if [[ ! "$music_gb" =~ ^[0-9]+$ ]]; then
-            echo
-            echo -n "${UI_TEXT[PARTITION_SIZE_3]}"
-            sleep 3
-            echo | tee -a "${LOG_FILE}"
-            continue
-        fi
-
-        if (( music_gb < 1 || music_gb > remaining_gb )); then
-            echo
-            echo -n "${UI_TEXT[PARTITION_SIZE_4]} $remaining_gb GB."
-            sleep 3
-            echo | tee -a "${LOG_FILE}"
-            continue
-        fi
-
-        remaining_gb=$((free_space - music_gb))
-        echo
-        echo "${UI_TEXT[PARTITION_DRIVE_7]}"
-        echo "${UI_TEXT[PARTITION_DRIVE_8]}"
-        echo
-        echo "${UI_TEXT[PARTITION_SIZE_1]} $remaining_gb GB"
-        echo
-        read -rp "${UI_TEXT[PARTITION_SIZE_2]} " contents_gb
-
-        if [[ ! "$contents_gb" =~ ^[0-9]+$ ]]; then
-            echo
-            echo -n "${UI_TEXT[PARTITION_SIZE_3]}"
-            sleep 3
-            echo | tee -a "${LOG_FILE}"
-            continue
-        fi
-
-        if (( contents_gb < 1 || contents_gb > remaining_gb )); then
-            echo
-            echo -n "${UI_TEXT[PARTITION_SIZE_4]} $remaining_gb GB."
-            sleep 3
-            echo | tee -a "${LOG_FILE}"
-            continue
-        fi
-
-        remaining_gb=$((free_space - music_gb - contents_gb ))
-
-        if (( remaining_gb > 0 )); then
-            echo
-            echo "${UI_TEXT[PARTITION_DRIVE_9]}"
-            echo "${UI_TEXT[PARTITION_DRIVE_10]}"
-            echo
-            read -rp "${UI_TEXT[PARTITION_DRIVE_11]} (y/n): " answer
-
-            if [[ "$answer" =~ ^[Yy]$ ]]; then
-                echo
-                echo "${UI_TEXT[PARTITION_DRIVE_12]}"
-                echo "${UI_TEXT[PARTITION_SIZE_1]} $remaining_gb GB"
-                echo
-                read -rp "${UI_TEXT[PARTITION_SIZE_2]} " reserve_gb
-
-                # Check if input is a valid number
-                if [[ ! "$reserve_gb" =~ ^[0-9]+$ ]]; then
-                    echo
-                    echo "${UI_TEXT[PARTITION_SIZE_3]}"
-                    sleep 3
-                    echo | tee -a "${LOG_FILE}"
-                    continue
-                fi
-
-                # Check if input is within valid range
-                if (( reserve_gb < 1 || reserve_gb > remaining_gb )); then
-                    echo
-                    echo "${UI_TEXT[PARTITION_SIZE_4]} $remaining_gb GB."
-                    sleep 3
-                    echo | tee -a "${LOG_FILE}"
-                    continue
-                fi
-            elif [[ "$answer" =~ ^[Nn]$ ]]; then
-                reserve_gb="0"
-            else
-                echo
-                echo -n "${UI_TEXT[CONFIRM]} (y/n)"
-                sleep 3
-                echo | tee -a "${LOG_FILE}"
-                continue
-            fi
-        else
-            reserve_gb="0"
-        fi
-
-        allocated_mb=$(( (music_gb + contents_gb + reserve_gb) * 1024 ))
-        APA_MiB=$(( allocated_mb + used + 6400 +128 ))
-        DIFF_MB=$(( SIZE_MB - APA_MiB - 32 ))
-
-        # Convert to GiB for display (1 GiB = 1024 MiB) with 2 decimal places
-        OPL_GB=$(awk "BEGIN { printf \"%.2f\", ${DIFF_MB}/1024 }")
-
-        if awk "BEGIN {exit !($OPL_GB >= 1000)}"; then
-            # Store difference as TB with one decimal
-            difference="$(awk "BEGIN {printf \"%.1f TB\", $OPL_GB/1024}")"
-            # Cap at 2 TB
-            CAP=$(awk "BEGIN {print ($difference > 2.0) ? 2.0 : $difference}")
-            OPL_SIZE="${CAP} TB"
-        else
-            # Store as GB
-            OPL_SIZE="${OPL_GB} GB"
-        fi
-
-        echo
-        echo "${UI_TEXT[PARTITION_DRIVE_13]}"
-        echo "${UI_TEXT[PARTITION_DRIVE_14]} $OPL_SIZE"
-        echo "${UI_TEXT[PARTITION_DRIVE_16]} $music_gb GB"
-        echo "${UI_TEXT[PARTITION_DRIVE_17]} $contents_gb GB"
-        echo "${UI_TEXT[PARTITION_DRIVE_18]} $reserve_gb GB"
-        echo
-        read -rp "${UI_TEXT[PROCEED]} (y/n): " confirm
-        if [[ "$confirm" =~ ^[Yy]$ ]]; then
-            music_partition=$((music_gb * 1024))
-            contents_partition=$((contents_gb * 1024))
-            reserved_space=$((reserve_gb * 1024))
-            break
-        fi
-    done
+    APA_MiB=$(( used + 6400 + 128 ))
+    DIFF_MB=$(( SIZE_MB - APA_MiB - 32 ))
+    OPL_GB=$(awk "BEGIN { printf \"%.2f\", ${DIFF_MB}/1024 }")
+    OPL_SIZE="${OPL_GB} GB"
 
     echo >> "${LOG_FILE}"
     echo "##########################################################################" >> "${LOG_FILE}"
     echo "Disk size: $SIZE_MB MB" >> "${LOG_FILE}"
-    echo "Used: $used MB" >> "${LOG_FILE}"
-    echo "Music partition size: $music_partition MB" >> "${LOG_FILE}"
-    echo "Contents partition size: $contents_partition MB" >> "${LOG_FILE}"
-    echo "Reserved user space: $reserved_space MB" >> "${LOG_FILE}"
-    echo "Reserved for launcher partitions: 6528 MB" >> "${LOG_FILE}"
-    echo "Recovery partition: 32 MB" >> "${LOG_FILE}"
+    echo "Used (System + Linux + Contents): $used MB" >> "${LOG_FILE}"
     echo "Total APA size: $APA_MiB MB" >> "${LOG_FILE}"
     echo "OPL partition size: $DIFF_MB MB" >> "${LOG_FILE}"
-    echo "##########################################################################"  >> "${LOG_FILE}"
+    echo "##########################################################################" >> "${LOG_FILE}"
     echo >> "${LOG_FILE}"
-
-    COMMANDS="device ${DEVICE}\n"
-    COMMANDS+="mkpart __linux.8 ${music_partition}M EXT2\n"
-    COMMANDS+="mkpart __contents ${contents_partition}M PFS\n"
-    COMMANDS+="exit"
-    echo "Creating partitions..." >>"${LOG_FILE}"
-    PFS_COMMANDS
 fi
 
 if [ "$OS" = "PSBBN" ]; then
@@ -1431,10 +1357,6 @@ fi
 mount_pfs
 
 if [ "$MODE" = "install" ]; then
-    sudo mkdir -p "${STORAGE_DIR}/__linux.8/MusicCh/contents" || {
-        echo "[X] Error: Failed to create __linux.8/MusicCh/contents" >>"${LOG_FILE}"
-        error_msg "${UI_TEXT[ERROR_MUSIC_FOLDER]}"
-    }
     mkdir -p "${STORAGE_DIR}/__common/Your Saves" 2>> "${LOG_FILE}"
 fi
 
@@ -1479,6 +1401,9 @@ if [ "$OSD_UPDATE" != "no" ]; then
         echo "[X] Error: Failed to copy hosdmenu.elf." >> "${LOG_FILE}"
         error_msg "${UI_TEXT[ERROR_INSTALL_HOSDMENU]}"
     }
+    if [[ -f "${ASSETS_DIR}/osdmenu/BB.ELF" ]]; then
+        sudo cp -f "${ASSETS_DIR}/osdmenu/BB.ELF" "${STORAGE_DIR}/__system/osdmenu/BB.ELF" 2>> "${LOG_FILE}" || true
+    fi
 fi
 
 case "$lang" in
@@ -1587,6 +1512,11 @@ ps1drv_enable_fast = 0
 ps1drv_enable_smooth = 0
 ps1drv_use_ps1vn = 1
 app_gameid = 1
+name_OSDSYS_ITEM_1 = BB Navigator
+path1_OSDSYS_ITEM_1 = hdd0:__system/osdmenu/BB.ELF
+name_OSDSYS_ITEM_2 = BB Navigator (Linux)
+path1_OSDSYS_ITEM_2 = hdd0:__system/p2lboot/osdboot.elf
+arg_OSDSYS_ITEM_2 = -titleid=SCPN-601.60
 EOL
     if [[ $? -ne 0 ]]; then
         echo "[X] Error: Failed to write OSDMENU.CNF." >> "${LOG_FILE}"
@@ -1595,6 +1525,15 @@ EOL
 else
     echo "OSDMENU.CNF already exists." >> "${LOG_FILE}"
     sed -i '/^OSDSYS_Inner_Browser/d; /^OSDSYS_Skip_Logo/d;' "${STORAGE_DIR}/__sysconf/osdmenu/OSDMENU.CNF" 2>> "${LOG_FILE}"
+    if ! grep -q "BB\.ELF" "${STORAGE_DIR}/__sysconf/osdmenu/OSDMENU.CNF"; then
+        cat >> "${STORAGE_DIR}/__sysconf/osdmenu/OSDMENU.CNF" <<'EOL'
+name_OSDSYS_ITEM_1 = BB Navigator
+path1_OSDSYS_ITEM_1 = hdd0:__system/osdmenu/BB.ELF
+name_OSDSYS_ITEM_2 = BB Navigator (Linux)
+path1_OSDSYS_ITEM_2 = hdd0:__system/p2lboot/osdboot.elf
+arg_OSDSYS_ITEM_2 = -titleid=SCPN-601.60
+EOL
+    fi
 fi
 
 if [ "$OS" = "PSBBN" ] && [ "$MODE" = "update" ] && version_le "${psbbn_version:-0}" "4.0.0"; then
@@ -1686,6 +1625,8 @@ if [ "$OS" = "PSBBN" ] && [ "$MODE" = "update" ]; then
        error_msg "${UI_TEXT[ERROR_SYSCONF_3]}"
     }
 fi
+
+INSTALL_SSH
 
 UNMOUNT_ALL
 

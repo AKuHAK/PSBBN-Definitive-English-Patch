@@ -1,20 +1,12 @@
 # Homebrew packages the installer needs on macOS.
-# Setup.sh installs them; check-deps.sh verifies them at every start.
-bash
+# Filtered for bare PSBBN Navigator (excluding POPS, games, media channels)
 coreutils
-findutils
 gnu-sed
-grep
 gawk
 wget
-axel
-rsync
 imagemagick
 ffmpeg
-ffmpegthumbnailer
-bchunk
 e2fsprogs
-mtools
 pkg-config
 icu4c
 python@3
