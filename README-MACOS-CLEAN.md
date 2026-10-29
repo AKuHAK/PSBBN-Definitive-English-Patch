@@ -118,3 +118,25 @@ sudo PSBBN_DEVICE=/dev/disk4 PSBBN_NONINTERACTIVE=1 /usr/local/bin/bash ./PSBBN-
 4. Развернет ядро, систему, HOSDMenu с `BB.ELF`.
 5. Установит SSH, SFTP, `sudo`, `strace`, `gdb`.
 6. Настроит сеть, DHCP-имя хоста `ps2` и завершит установку.
+
+---
+
+## 5. Тестирование установки на виртуальном образе диска (без физического HDD)
+
+Вы можете протестировать весь процесс установки прямо на Mac в виртуальном разреженном образе (sparse image), не занимающем места на SSD:
+
+```bash
+# 1. Создать разреженный файл образа на 40 ГБ (фактически занимает 0 байт на диске)
+truncate -s 40G /tmp/psbbn_test.img
+
+# 2. Подключить образ как сырой диск macOS:
+hdiutil attach -nomount -imagekey diskimage-class=CRawDiskImage /tmp/psbbn_test.img
+# Команда выведет имя созданного устройства, например /dev/disk4
+
+# 3. Запустить установку на виртуальный диск:
+sudo PSBBN_DEVICE=/dev/disk4 PSBBN_NONINTERACTIVE=1 /usr/local/bin/bash ./PSBBN-Definitive-Patch.sh
+
+# 4. После завершения проверки отмонтировать и при желании удалить тестовый образ:
+hdiutil detach /dev/disk4
+rm /tmp/psbbn_test.img
+```
