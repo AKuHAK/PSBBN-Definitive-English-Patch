@@ -1125,12 +1125,12 @@ psbbn_ext2_export() {
 # pass e2fsck afterwards. Only real failures are reported.
 psbbn_debugfs_apply() {
     local script="$1" image="$2"
-    "$(psbbn_python)" "$_psbbn_darwin_dir/debugfs_apply.py" "$image" "$script"
+    platform_elevate "$(psbbn_python)" "$_psbbn_darwin_dir/debugfs_apply.py" "$image" "$script"
 }
 
 # e2fsck gate. Bitmap-free zombie inodes are cleared; anything else fails.
 psbbn_ext2_check() {
-    "$(psbbn_python)" "$_psbbn_darwin_dir/debugfs_apply.py" --check "$1"
+    platform_elevate "$(psbbn_python)" "$_psbbn_darwin_dir/debugfs_apply.py" --check "$1"
 }
 
 # Write the staged directory back into the ext2 image.
@@ -1142,7 +1142,7 @@ psbbn_ext2_check() {
 psbbn_ext2_import() {
     local src="$1" image="$2" manifest="${3:-}" script
     script=$(mktemp)
-    "$(psbbn_python)" - "$src" "$script" "$manifest" "$_psbbn_darwin_dir" << 'PY'
+    platform_elevate "$(psbbn_python)" - "$src" "$script" "$manifest" "$_psbbn_darwin_dir" << 'PY'
 import os, stat, sys
 root, script_path, manifest_path, libdir = sys.argv[1:5]
 sys.dont_write_bytecode = True

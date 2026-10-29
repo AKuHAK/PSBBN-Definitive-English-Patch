@@ -59,7 +59,7 @@ def main(argv):
         return 0
     flags, cols, device = parse(argv)
     diskutil = os.environ.get("PSBBN_DISKUTIL", "diskutil")
-    listing = load([diskutil, "list", "-plist", "external", "physical"])
+    listing = load([diskutil, "list", "-plist", "external"])
     rows = []
     for disk in listing.get("AllDisksAndPartitions") or []:
         ident = disk.get("DeviceIdentifier")
